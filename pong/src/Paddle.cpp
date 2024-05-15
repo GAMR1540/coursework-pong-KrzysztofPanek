@@ -16,12 +16,20 @@ void Paddle::draw(sf::RenderWindow& window)
 }
 
 void Paddle::move(float dt, float windowYVal)
-{
-	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > windowYVal)
-		m_shape.move(0, -m_speed * dt);
+{	
+	//default
+	//move up
+	//if (m_shape.getPosition().y - m_shape.getSize().y / 2 > windowYVal)
+	//	m_shape.move(0, -m_speed * dt);
+	//// move down
+	//if (m_shape.getPosition().y + m_shape.getSize().y / 2 < windowYVal)
+	//	m_shape.move(0, m_speed * dt);
 
-	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < windowYVal)
-		m_shape.move(0, m_speed * dt);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		int y=m_shape.getPosition().y;
+		y--;
+	}
 }
 
 sf::FloatRect Paddle::getBounds() const
