@@ -38,6 +38,12 @@ void Paddle::moveUp(float dt)
 		m_shape.move(0, -m_speed * dt);
 }
 
+void Paddle::moveDown(float dt)
+{
+	if (m_shape.getPosition().y + m_shape.getSize().y / 2 > 0)
+		m_shape.move(0, m_speed * dt);
+}
+
 sf::FloatRect Paddle::getBounds() const
 {
 	return m_shape.getGlobalBounds();

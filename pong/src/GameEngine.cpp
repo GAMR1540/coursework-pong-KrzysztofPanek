@@ -6,9 +6,9 @@ using namespace std;
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
-	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::White),
-	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::White)
+	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
+	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::Red),
+	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow)
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
@@ -81,12 +81,19 @@ void GameEngine::run()
 
 		// ADD YOUR CODE HERE !!!
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
 			cout << "UP key pressed" << endl;
 			m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
+		}*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			m_paddle1.moveUp(dt);
 		}
-		
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			m_paddle1.moveDown(dt);
+		}
 		// update hud
 		update();
 		// draw shapes to screen

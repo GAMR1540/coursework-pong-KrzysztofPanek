@@ -18,5 +18,6 @@ public:
 	void setSpeed(float speed);
 	float getSpeed();
 	void moveUp(float dt);
+	void moveDown(float dt);
 };
 
