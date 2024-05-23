@@ -1,5 +1,9 @@
 #include "GameEngine.h"
 
+#include <iostream>
+
+using namespace std;
+
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::White),
@@ -77,6 +81,11 @@ void GameEngine::run()
 
 		// ADD YOUR CODE HERE !!!
 		
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			cout << "UP key pressed" << endl;
+			m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
+		}
 		
 		// update hud
 		update();

@@ -19,17 +19,23 @@ void Paddle::move(float dt, float windowYVal)
 {	
 	//default
 	//move up
-	//if (m_shape.getPosition().y - m_shape.getSize().y / 2 > windowYVal)
-	//	m_shape.move(0, -m_speed * dt);
+	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
+		m_shape.move(0, -m_speed * dt);
 	//// move down
-	//if (m_shape.getPosition().y + m_shape.getSize().y / 2 < windowYVal)
-	//	m_shape.move(0, m_speed * dt);
+	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 0)
+		m_shape.move(0, m_speed * dt);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		int y=m_shape.getPosition().y;
-		y--;
-	}
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	//{
+	//	int y=m_shape.getPosition().y;
+	//	y--;
+	//}
+}
+
+void Paddle::moveUp(float dt)
+{
+	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
+		m_shape.move(0, -m_speed * dt);
 }
 
 sf::FloatRect Paddle::getBounds() const
@@ -45,4 +51,9 @@ sf::RectangleShape Paddle::getShape()
 void Paddle::setSpeed(float speed)
 {
 	m_speed = speed;
+}
+
+float Paddle::getSpeed()
+{
+	return m_speed;
 }

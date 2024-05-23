@@ -16,5 +16,7 @@ public:
 	sf::RectangleShape getShape();
 
 	void setSpeed(float speed);
+	float getSpeed();
+	void moveUp(float dt);
 };
 
