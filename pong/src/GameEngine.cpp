@@ -118,24 +118,54 @@ void GameEngine::run()
 		int random_number = dis(gen);
 		cout << random_number << endl;
 		//if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
-		if (random_number > rnd_max-rnd_max*0.1)
+		if (random_number > rnd_max-rnd_max*0.2)
 		{
 			//move_up
 			m_paddle2.moveUp(dt/5);
 			Sleep(100);
 		}
 		//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
-		else if (random_number < rnd_max * 0.11)
+		else if (random_number < rnd_max * 0.21)
 		{
 			//move_down
+
 			m_paddle2.moveDown(dt/5);
 			Sleep(100);
 		}
+		/*
+		//if (random_number > rnd_max * 0.95)
+		if (random_number > 200)
+		{
+			//random AI -- easy mode
 
+				//if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
+			if (random_number > rnd_max - rnd_max * 0.5)
+			{
+				//move_up
+				m_paddle2.moveUp(dt / 5);
+				//Sleep(100);
+			}
+			//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
+			else if (random_number < rnd_max * 0.51)
+			{
+				//move_down
+
+				m_paddle2.moveDown(dt / 5);
+				//Sleep(100);
+			}
+		}
+		else
+		{
+			//impossible
+			//m_paddle2.getPosition.y() = m_ball.getPosition.y();
+			//m_paddle2.setPosition(m_paddle2.getPosition().x, m_ball.getPosition().y);
+
+
+		}
 
 		// update hud
 		update();
 		// draw shapes to screen
 		draw();
-	}
+	}*/
 }

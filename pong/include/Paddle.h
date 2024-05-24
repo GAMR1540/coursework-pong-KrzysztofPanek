@@ -20,5 +20,7 @@ public:
 	void moveUp(float dt);
 	void moveDown(float dt);
 	int getPosition();
+	int setPosition();
+
 };
 

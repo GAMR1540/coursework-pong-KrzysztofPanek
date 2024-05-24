@@ -9,6 +9,7 @@ Paddle::Paddle(sf::Vector2f position, float width, float height, sf::Color color
 	m_shape.setFillColor(color);
 	m_shape.setOrigin(m_shape.getSize() / 2.f);
 	m_shape.getPosition();
+	//m_shape.setPosition();
 }
 
 void Paddle::draw(sf::RenderWindow& window)
