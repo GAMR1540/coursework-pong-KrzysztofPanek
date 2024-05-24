@@ -8,6 +8,7 @@ Paddle::Paddle(sf::Vector2f position, float width, float height, sf::Color color
 	m_shape.setPosition(position);
 	m_shape.setFillColor(color);
 	m_shape.setOrigin(m_shape.getSize() / 2.f);
+	m_shape.getPosition();
 }
 
 void Paddle::draw(sf::RenderWindow& window)
@@ -18,12 +19,12 @@ void Paddle::draw(sf::RenderWindow& window)
 void Paddle::move(float dt, float windowYVal)
 {	
 	//default
-	//move up
-	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
-		m_shape.move(0, -m_speed * dt);
-	//// move down
-	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 0)
-		m_shape.move(0, m_speed * dt);
+	////move up
+	//if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
+	//	m_shape.move(0, -m_speed * dt);
+	////// move down
+	//if (m_shape.getPosition().y + m_shape.getSize().y / 2 < window.getSize().y)
+	//	m_shape.move(0, m_speed * dt);
 
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	//{
@@ -39,8 +40,8 @@ void Paddle::moveUp(float dt)
 }
 
 void Paddle::moveDown(float dt)
-{
-	if (m_shape.getPosition().y + m_shape.getSize().y / 2 > 0)
+{//window.getSize().y
+	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 600)
 		m_shape.move(0, m_speed * dt);
 }
 

@@ -28,6 +28,7 @@ public:
 	GameEngine(sf::RenderWindow& window);
 	void draw();
 	void update();
+	void rand128();
 	void run();
 };
 

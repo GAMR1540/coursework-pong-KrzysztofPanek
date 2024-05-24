@@ -1,6 +1,8 @@
 #include "GameEngine.h"
 
 #include <iostream>
+#include <random>
+#include <windows.h>
 
 using namespace std;
 
@@ -21,6 +23,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
 
 	m_paddle1.setSpeed(1000.f);
+	m_paddle2.setSpeed(1000.f);
 	
 }
 
@@ -32,6 +35,16 @@ void GameEngine::draw()
 	m_ball.draw(m_window);
 	m_window.draw(m_hud);
 	m_window.display();
+}
+void GameEngine::rand128()
+{
+	//random AI
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> dis(0, 127);
+	int random_number = dis(gen);
+
+
 }
 
 void GameEngine::update()
@@ -94,6 +107,32 @@ void GameEngine::run()
 		{
 			m_paddle1.moveDown(dt);
 		}
+		//AI
+		//random AI
+		// Get the mouse position relative to the desktop
+		sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
+		random_device rd;
+		mt19937 gen(rd());
+		int rnd_max = 127 + mousePositionDesktop.y;
+		uniform_int_distribution<> dis(0, rnd_max);
+		int random_number = dis(gen);
+		cout << random_number << endl;
+		//if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
+		if (random_number > rnd_max-rnd_max*0.1)
+		{
+			//move_up
+			m_paddle2.moveUp(dt/5);
+			Sleep(100);
+		}
+		//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
+		else if (random_number < rnd_max * 0.11)
+		{
+			//move_down
+			m_paddle2.moveDown(dt/5);
+			Sleep(100);
+		}
+
+
 		// update hud
 		update();
 		// draw shapes to screen

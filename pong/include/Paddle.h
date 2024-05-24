@@ -19,5 +19,6 @@ public:
 	float getSpeed();
 	void moveUp(float dt);
 	void moveDown(float dt);
+	int getPosition();
 };
 
