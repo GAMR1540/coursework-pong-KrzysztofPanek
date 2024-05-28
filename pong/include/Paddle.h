@@ -19,8 +19,9 @@ public:
 	float getSpeed();
 	void moveUp(float dt);
 	void moveDown(float dt);
-	int getPosition();
-	int setPosition();
+	//int getPosition();
+	sf::Vector2f setPosition();
+	sf::Vector2f getPosition();
 
 };
 

@@ -109,7 +109,7 @@ void GameEngine::run()
 			m_paddle1.moveDown(dt);
 		}
 
-		////score
+		// increse player score
 		if ((m_ball.getPosition().x < 0))
 		{
 			m_p2Score++;
@@ -117,7 +117,7 @@ void GameEngine::run()
 			//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 			//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 		}
-		if ((m_ball.getPosition().x > 800))
+		else if ((m_ball.getPosition().x > 800))
 		{
 			m_p1Score++;
 
@@ -126,7 +126,7 @@ void GameEngine::run()
 		}
 
 
-		//AI
+		//Restet ball position
 		if ((m_ball.getPosition().x < 0)||(m_ball.getPosition().x > 800))
 		{
 			m_ball.setPosition(800 / 2.f, 600 / 2.f);
@@ -135,7 +135,15 @@ void GameEngine::run()
 			//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 		}
 		 
-
+		//AI
+		if ((m_ball.getPosition().y < m_paddle2.getPosition().y))
+		{
+			m_paddle2.moveUp(dt / 2);
+		}		
+		else if ((m_ball.getPosition().y > m_paddle2.getPosition().y))
+		{
+			m_paddle2.moveDown(dt / 2);
+		}
 
 		 
 		 

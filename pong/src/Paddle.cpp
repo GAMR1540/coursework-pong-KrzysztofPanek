@@ -6,6 +6,7 @@ Paddle::Paddle(sf::Vector2f position, float width, float height, sf::Color color
 	m_size.y = height;
 	m_shape.setSize(m_size);
 	m_shape.setPosition(position);
+	m_shape.getPosition();
 	m_shape.setFillColor(color);
 	m_shape.setOrigin(m_shape.getSize() / 2.f);
 	m_shape.getPosition();
@@ -64,4 +65,9 @@ void Paddle::setSpeed(float speed)
 float Paddle::getSpeed()
 {
 	return m_speed;
+}
+
+sf::Vector2f Paddle::getPosition()
+{
+	return m_shape.getPosition();
 }
