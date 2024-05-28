@@ -21,6 +21,7 @@ private:
 
 	int m_p1Score;
 	int m_p2Score;
+	int m_diff;
 	static const int m_maxScore = 3;
 	enum GameStates {intro, playing, gameOver};
 	GameStates m_gStates;

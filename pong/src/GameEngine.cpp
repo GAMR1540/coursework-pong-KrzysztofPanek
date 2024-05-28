@@ -14,6 +14,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
+	m_diff = -1;
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
 	m_hud.setFont(m_font);
@@ -51,13 +52,38 @@ void GameEngine::update()
 {
 	// update hud
 	std::stringstream ss;
-	switch (m_gStates)
+	if (m_diff < 0)
+	{
+		ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1 - Amoeba\n2 - Human\n3 - Terminator";
+		switch (m_diff)
+		{
+		case 1:
+			m_diff = 5;
+			cout << "amoeba"<<endl;
+			break;
+		case 2:
+			m_diff = 3;
+			cout << "human" << endl;
+			break;
+		case 3:
+			m_diff = 1;
+			cout << "terminator" << endl;
+			break;
+		default:
+			break;
+		} 
+	}
+	
+	else if (m_diff > 0)
+	{
+		switch (m_gStates)
 	{
 	case GameEngine::intro:
 		ss << "Press the Space\nkey to start";
 		break;
 	case GameEngine::playing:
 		ss << m_p1Score << " - " << m_p2Score;
+
 		break;
 	case GameEngine::gameOver:
 		if (m_p1Score > m_p2Score) {
@@ -70,7 +96,9 @@ void GameEngine::update()
 	default:
 		break;
 	}
-		
+	}
+	
+
 	m_hud.setString(ss.str());
 }
 
@@ -88,6 +116,7 @@ void GameEngine::run()
 			if (event.type == sf::Event::Closed) m_window.close();
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				m_window.close();
+			if (event.type == sf::Event::KeyPressed && ((event.key.code == sf::Keyboard::Num1) || (event.key.code == sf::Keyboard::Num2) || (event.key.code == sf::Keyboard::Num3)))
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
 				m_gStates = GameStates::playing;
 		}
@@ -138,11 +167,11 @@ void GameEngine::run()
 		//AI
 		if (m_ball.getPosition().x > 600 && (m_ball.getPosition().y < m_paddle2.getPosition().y))
 		{
-			m_paddle2.moveUp(dt / 4);
+			m_paddle2.moveUp(dt / m_diff);
 		}		
 		else if (m_ball.getPosition().x>600 && (m_ball.getPosition().y > m_paddle2.getPosition().y))
 		{
-			m_paddle2.moveDown(dt / 3);
+			m_paddle2.moveDown(dt / m_diff);
 		}
 
 		 
