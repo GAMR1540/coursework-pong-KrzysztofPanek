@@ -18,6 +18,7 @@ private:
 	Paddle m_paddle1;
 	Paddle m_paddle2;
 	Ball m_ball;
+	Ball m_ball2;
 
 	int m_p1Score;
 	int m_p2Score;

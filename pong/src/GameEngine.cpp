@@ -10,7 +10,8 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	: m_window(window),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::Red),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow)
+	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow)
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
@@ -40,6 +41,7 @@ void GameEngine::draw()
 	m_paddle1.draw(m_window);
 	m_paddle2.draw(m_window);
 	m_ball.draw(m_window);
+	m_ball2.draw(m_window);
 	m_window.draw(m_hud);
 	m_window.display();
 }
@@ -235,8 +237,9 @@ void GameEngine::run()
 				if (m_diff== 4) if (m_viewDist < 32)  m_viewDist = 800;
 				cout << m_viewDist << endl; 
 			}
-	
+			
 			m_ball.setPosition(800 / 2.f, 600 / 2.f);
+			m_ball2.setPosition(800 / 4.f, 600 / 4.f);
 
 			//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 			//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
@@ -313,6 +316,7 @@ void GameEngine::run()
 
 		
 			m_ball.move(-dt, m_window);
+			m_ball2.move(-dt, m_window);
 
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
