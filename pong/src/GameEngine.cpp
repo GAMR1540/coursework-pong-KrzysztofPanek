@@ -136,13 +136,13 @@ void GameEngine::run()
 		}
 		 
 		//AI
-		if ((m_ball.getPosition().y < m_paddle2.getPosition().y))
+		if (m_ball.getPosition().x > 600 && (m_ball.getPosition().y < m_paddle2.getPosition().y))
 		{
-			m_paddle2.moveUp(dt / 2);
+			m_paddle2.moveUp(dt / 4);
 		}		
-		else if ((m_ball.getPosition().y > m_paddle2.getPosition().y))
+		else if (m_ball.getPosition().x>600 && (m_ball.getPosition().y > m_paddle2.getPosition().y))
 		{
-			m_paddle2.moveDown(dt / 2);
+			m_paddle2.moveDown(dt / 3);
 		}
 
 		 
