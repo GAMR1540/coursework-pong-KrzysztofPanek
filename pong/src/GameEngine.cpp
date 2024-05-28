@@ -122,7 +122,7 @@ void GameEngine::run()
 		{
 			//move_up
 			m_paddle2.moveUp(dt/5);
-			Sleep(100);
+			//Sleep(100);
 		}
 		//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
 		else if (random_number < rnd_max * 0.21)
@@ -130,7 +130,7 @@ void GameEngine::run()
 			//move_down
 
 			m_paddle2.moveDown(dt/5);
-			Sleep(100);
+			//Sleep(100);
 		}
 		/*
 		//if (random_number > rnd_max * 0.95)
@@ -161,11 +161,15 @@ void GameEngine::run()
 			//m_paddle2.setPosition(m_paddle2.getPosition().x, m_ball.getPosition().y);
 
 
-		}
+		}*/
+
+
+		m_ball.updateVelocity(1);
+		m_ball.move(dt, m_window);
 
 		// update hud
 		update();
 		// draw shapes to screen
 		draw();
-	}*/
+	}
 }
