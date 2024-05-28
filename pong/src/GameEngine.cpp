@@ -14,7 +14,13 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
-	m_diff = -1;
+	ai = 1;
+	m_diff = 0;
+	m_viewDist = 0;
+	m_defend = 0;
+	rnd_max = 800;
+
+
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
 	m_hud.setFont(m_font);
@@ -52,34 +58,53 @@ void GameEngine::update()
 {
 	// update hud
 	std::stringstream ss;
-	if (m_diff < 0)
-	{
-		ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1 - Amoeba\n2 - Human\n3 - Terminator";
-		switch (m_diff)
-		{
-		case 1:
-			m_diff = 5;
-			cout << "amoeba"<<endl;
-			break;
-		case 2:
-			m_diff = 3;
-			cout << "human" << endl;
-			break;
-		case 3:
-			m_diff = 1;
-			cout << "terminator" << endl;
-			break;
-		default:
-			break;
-		} 
-	}
+	//if (m_diff < 0 && m_gStates != 1 )
+	//{
+	//	ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1 - Amoeba\n2 - Human\n3 - Terminator\n";
+	//	switch (m_diff)
+	//	{
+	//	case 1:
+	//		m_diff = 5;
+	//		cout << "amoeba"<<endl;
+	//		break;
+	//	case 2:
+	//		m_diff = 3;
+	//		cout << "human" << endl;
+	//		break;
+	//	case 3:
+	//		m_diff = 1;
+	//		cout << "terminator" << endl;
+	//		break;
+	//	default:
+	//		break;
+	//	} 
+	//}
 	
-	else if (m_diff > 0)
-	{
+	//else if (m_diff > 0)
+	//{
 		switch (m_gStates)
 	{
 	case GameEngine::intro:
-		ss << "Press the Space\nkey to start";
+		//ss << "Press the Space\nkey to start";
+		ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1 - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
+		/*ss >> m_diff;*/
+		//switch (m_diff)
+		//{
+		//case 1:
+		//	m_diff = 5;
+		//	cout << "amoeba" << endl;
+		//	break;
+		//case 2:
+		//	m_diff = 3;
+		//	cout << "human" << endl;
+		//	break;
+		//case 3:
+		//	m_diff = 1;
+		//	cout << "terminator" << endl;
+		//	break;
+		//default:
+		//	break;
+		//}
 		break;
 	case GameEngine::playing:
 		ss << m_p1Score << " - " << m_p2Score;
@@ -96,7 +121,7 @@ void GameEngine::update()
 	default:
 		break;
 	}
-	}
+	//}
 	
 
 	m_hud.setString(ss.str());
@@ -105,7 +130,7 @@ void GameEngine::update()
 void GameEngine::run()
 {
 	float dt;
-
+	
 	while (m_window.isOpen())
 	{
 		dt = m_clock.restart().asSeconds();
@@ -116,12 +141,46 @@ void GameEngine::run()
 			if (event.type == sf::Event::Closed) m_window.close();
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				m_window.close();
-			if (event.type == sf::Event::KeyPressed && ((event.key.code == sf::Keyboard::Num1) || (event.key.code == sf::Keyboard::Num2) || (event.key.code == sf::Keyboard::Num3)))
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+			//if (event.type == sf::Event::KeyPressed && ((event.key.code == sf::Keyboard::Num1) || (event.key.code == sf::Keyboard::Num2) || (event.key.code == sf::Keyboard::Num3)))
+			//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::Num1)
+			{
+				m_diff = 4;
+				m_viewDist = 600;
+				int rnd_max = 800;
+				int rnd_min = 600;
+
+			}
+			if (event.key.code == sf::Keyboard::Num2)
+			{
+				m_diff = 3;
+				m_viewDist = 300;
+				int rnd_max = 800;
+				int rnd_min = 600;
+			}
+			if (event.key.code == sf::Keyboard::Num3)
+			{
+				m_diff = 2;
+				m_viewDist = 300;
+				int rnd_max = 750;
+				int rnd_min = 500;
+			}			
+			if (event.key.code == sf::Keyboard::Num4)
+			{
+				m_diff = 1;
+				m_viewDist = 100;
+				int rnd_max = 200;
+				int rnd_min = 0;
+			}
+							
+				
+			if (m_diff!=0)
+			//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
 				m_gStates = GameStates::playing;
 		}
 		if (m_gStates == 1)
 		{
+			//cout << m_diff;
 		// ADD YOUR CODE HERE !!!
 		
 		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -158,6 +217,25 @@ void GameEngine::run()
 		//Restet ball position
 		if ((m_ball.getPosition().x < 0)||(m_ball.getPosition().x > 800))
 		{
+			//random AI
+					// Get the mouse position relative to the desktop
+			//sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
+			if (ai == 1)
+			{	random_device rd;
+				mt19937 gen(rd());
+				//int rnd_max = 127 + mousePositionDesktop.y;
+				/*int rnd_max = 800;*/
+
+				uniform_int_distribution<> dis(300, rnd_max);
+				//int m_viewDist = dis(gen);
+				m_viewDist = dis(gen);
+				if (m_diff== 1) if (m_viewDist>720) m_viewDist = 800;
+				if (m_diff== 2) if (m_viewDist < 320 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+				if (m_diff== 3) if (m_viewDist < 150 || (m_viewDist < 710 && m_viewDist>690)) m_viewDist = 800;
+				if (m_diff== 4) if (m_viewDist < 32)  m_viewDist = 800;
+				cout << m_viewDist << endl; 
+			}
+	
 			m_ball.setPosition(800 / 2.f, 600 / 2.f);
 
 			//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
@@ -165,11 +243,11 @@ void GameEngine::run()
 		}
 		 
 		//AI
-		if (m_ball.getPosition().x > 600 && (m_ball.getPosition().y < m_paddle2.getPosition().y))
+		if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y < m_paddle2.getPosition().y))
 		{
 			m_paddle2.moveUp(dt / m_diff);
 		}		
-		else if (m_ball.getPosition().x>600 && (m_ball.getPosition().y > m_paddle2.getPosition().y))
+		else if (m_ball.getPosition().x> m_viewDist && (m_ball.getPosition().y > m_paddle2.getPosition().y))
 		{
 			m_paddle2.moveDown(dt / m_diff);
 		}
@@ -239,13 +317,51 @@ void GameEngine::run()
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
+				if (ai == 1)
+				{
+					random_device rd;
+					mt19937 gen(rd());
+					//int rnd_max = 127 + mousePositionDesktop.y;
+					/*int rnd_max = 800;*/
+
+					uniform_int_distribution<> dis(300, rnd_max);
+					//int m_viewDist = dis(gen);
+					m_viewDist = dis(gen);
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					cout << m_viewDist << endl;
+				}
+
+
 				m_ball.updateVelocity(-1);
+
+				
 			}
 
 
 			if (m_paddle2.getBounds().contains(m_ball.getPosition()))
 			{
+				if (ai == 1)
+				{
+					random_device rd;
+					mt19937 gen(rd());
+					//int rnd_max = 127 + mousePositionDesktop.y;
+					/*int rnd_max = 800;*/
+
+					uniform_int_distribution<> dis(300, rnd_max);
+					//int m_viewDist = dis(gen);
+					m_viewDist = dis(gen);
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					cout << m_viewDist << endl;
+				}
+				
+				
+				
 				m_ball.updateVelocity(1);
+			}
+
+			if (m_p1Score>19 || m_p2Score > 19)
+			{
+				m_gStates= GameEngine::gameOver;
 			}
 		
 		}
