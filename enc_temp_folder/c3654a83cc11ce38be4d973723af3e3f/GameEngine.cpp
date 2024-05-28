@@ -109,7 +109,6 @@ void GameEngine::run()
 			m_paddle1.moveDown(dt);
 		}
 
-		////score
 		if ((m_ball.getPosition().x < 0))
 		{
 			m_p2Score++;
