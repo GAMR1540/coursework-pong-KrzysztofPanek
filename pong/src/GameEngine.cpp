@@ -132,6 +132,7 @@ void GameEngine::update()
 void GameEngine::run()
 {
 	float dt;
+	float spd = 1;
 	
 	while (m_window.isOpen())
 	{
@@ -151,6 +152,7 @@ void GameEngine::run()
 				m_viewDist = 600;
 				int rnd_max = 800;
 				int rnd_min = 600;
+				spd = 0.25;
 
 			}
 			if (event.key.code == sf::Keyboard::Num2)
@@ -159,6 +161,7 @@ void GameEngine::run()
 				m_viewDist = 300;
 				int rnd_max = 800;
 				int rnd_min = 600;
+				spd = 0.5;
 			}
 			if (event.key.code == sf::Keyboard::Num3)
 			{
@@ -166,6 +169,7 @@ void GameEngine::run()
 				m_viewDist = 300;
 				int rnd_max = 750;
 				int rnd_min = 500;
+				spd = 1;
 			}			
 			if (event.key.code == sf::Keyboard::Num4)
 			{
@@ -173,6 +177,7 @@ void GameEngine::run()
 				m_viewDist = 100;
 				int rnd_max = 200;
 				int rnd_min = 0;
+				spd = 2;
 			}
 							
 				
@@ -316,7 +321,8 @@ void GameEngine::run()
 
 		
 			m_ball.move(-dt, m_window);
-			m_ball2.move(-dt, m_window);
+
+			//m_ball2.move(-dt, m_window);
 
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
@@ -335,8 +341,8 @@ void GameEngine::run()
 					cout << m_viewDist << endl;
 				}
 
-
-				m_ball.updateVelocity(-1);
+				//spd += 0.1;
+				m_ball.updateVelocity(-spd);
 
 				
 			}
@@ -359,8 +365,8 @@ void GameEngine::run()
 				}
 				
 				
-				
-				m_ball.updateVelocity(1);
+				//spd += 0.1;
+				m_ball.updateVelocity(spd);
 			}
 
 			if (m_p1Score>19 || m_p2Score > 19)
