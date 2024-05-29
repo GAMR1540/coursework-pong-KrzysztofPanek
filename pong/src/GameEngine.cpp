@@ -19,21 +19,23 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
-	ai = 1;
+	ai = false;
 	m_diff = 0;
 	m_viewDist = 0;
 	m_defend = 0;
 	rnd_max = 800;
 	ball2=true;
-	
+	//sf::Color orange(255, 160, 0);
+	sf::Color c(0, 0, 0);
 
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
 	m_hud.setFont(m_font);
-	m_hud.setCharacterSize(50);
-	m_hud.setFillColor(sf::Color::White);
+	m_hud.setCharacterSize(255);
+	//m_hud.setFillColor(sf::Color::White);
+	m_hud.setFillColor(c);
 
-	m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
+	m_hud.setPosition((m_window.getSize().x / 6.f) - 45.f, 10);
 
 	m_paddle1.setSpeed(1000.f);
 	m_paddle2.setSpeed(1000.f);
@@ -69,26 +71,19 @@ void GameEngine::update()
 	switch (m_gStates)
 	{
 	case GameEngine::intro:
+		ss << "P.O.N.G.";
+		break;	
+	case GameEngine::mainMenu:
 		//ss << "Press the Space\nkey to start";
-		ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
-		/*ss >> m_diff;*/
-		//switch (m_diff)
-		//{
-		//case 1:
-		//	m_diff = 5;
-		//	cout << "amoeba" << endl;
-		//	break;
-		//case 2:
-		//	m_diff = 3;
-		//	cout << "human" << endl;
-		//	break;
-		//case 3:
-		//	m_diff = 1;
-		//	cout << "terminator" << endl;
-		//	break;
-		//default:
-		//	break;
-		//}
+		ss << "    P.O.N.G.\n\n\nQ - 1 Player\nA - 2 Player\n\nZ - Top10\n\nEsc - Quit";
+		break;
+	case GameEngine::vsAi:
+		//ss << "Press the Space\nkey to start";
+		ss << "    P.O.N.G.\n\n\nChoose how smart\nis ypur opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
+		break;
+	case GameEngine::top10:
+		//ss << "Press the Space\nkey to start";
+		ss << "    P.O.N.G.\n\n\nTop 10\n";
 		break;
 	case GameEngine::playing:
 		ss << m_p1Score << " - " << m_p2Score;
@@ -115,63 +110,164 @@ void GameEngine::run()
 {
 	float dt;
 	float spd = 1;
-	
+	int countD = 50;
+	float r = 0;
+	float g = 0;
+	float b = 0;
 	while (m_window.isOpen())
 	{
 		dt = m_clock.restart().asSeconds();
-
+		if (m_gStates == 0)
+		{
+			sf::Color c(r, g, b);
+			m_hud.setFillColor(c);
+			countD--;
+			cout << countD << endl;
+			if (r < 255) r+=0.025;
+			//else if (g < 255) g += 0.1;
+			//else if (b < 255) b += 0.1;
+			else
+			{
+				g = 255;
+				b = 255;
+				sf::Color c(r, g, b);
+				m_hud.setFillColor(c);
+				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
+				m_hud.setPosition((m_window.getSize().x / 2.f) - 70.f, 10);
+				m_hud.setCharacterSize(40);
+				m_gStates = GameStates::mainMenu;
+			}
+		}
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed) m_window.close();
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-				m_window.close();
-			//if (event.type == sf::Event::KeyPressed && ((event.key.code == sf::Keyboard::Num1) || (event.key.code == sf::Keyboard::Num2) || (event.key.code == sf::Keyboard::Num3)))
-			//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
-			if (event.key.code == sf::Keyboard::Num1)
+
+			//m_gStates = GameStates::intro
+			if (m_gStates == 0)
 			{
-				m_diff = 4;
-				m_viewDist = 600;
-				int rnd_max = 800;
-				int rnd_min = 600;
-				spd = 0.5;
-				ballSize = 12;
-			}
-			if (event.key.code == sf::Keyboard::Num2)
-			{
-				m_diff = 3;
-				m_viewDist = 300;
-				int rnd_max = 700;
-				int rnd_min = 300;
-				spd = 0.75;
-				ballSize = 10;
-			}
-			if (event.key.code == sf::Keyboard::Num3)
-			{
-				m_diff = 2;
-				m_viewDist = 300;
-				int rnd_max = 700;
-				int rnd_min = 300;
-				spd = 1;
-				ballSize = 8;
-			}			
-			if (event.key.code == sf::Keyboard::Num4)
-			{
-				m_diff = 1;
-				m_viewDist = 100;
-				int rnd_max = 300;
-				int rnd_min = 0;
-				spd = 1.5;
-				ballSize = 6;
-			}
-							
+
+				/*sf::Color c(r, g, b);
+				m_hud.setFillColor(c);*/
+
+				//if (countD < 1) m_gStates = GameStates::mainMenu;
 				
-			if (m_diff!=0)
-			//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+				//if (event.type == sf::Event::Closed) m_window.close();
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					m_window.close();
+			}
+
+			//m_gStates = GameStates::mainMenu
+			if (m_gStates == 1)
+			{
+				//if (event.type == sf::Event::Closed) m_window.close();
+				//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				//	m_window.close();
+
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q)
+				{
+					m_gStates = GameStates::vsAi;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+				{
+					m_gStates = GameStates::mPlayer;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
+				{
+					m_gStates = GameStates::mainMenu;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				{
+					m_window.close();
+				}
+
+			}
+
+			//m_gStates = GameStates::vsAi
+			if (m_gStates == 2)
+			{
+				//if (event.type == sf::Event::Closed) m_window.close();
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					m_gStates = GameStates::mainMenu;
+				//if (event.type == sf::Event::KeyPressed && ((event.key.code == sf::Keyboard::Num1) || (event.key.code == sf::Keyboard::Num2) || (event.key.code == sf::Keyboard::Num3)))
+				//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+				
+				//turn on AI
+				ai = true;
+				
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num1)
+				{
+					m_diff = 4;
+					m_viewDist = 600;
+					int rnd_max = 800;
+					int rnd_min = 600;
+					spd = 0.5;
+					ballSize = 12;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num2)
+				{
+					m_diff = 3;
+					m_viewDist = 300;
+					int rnd_max = 700;
+					int rnd_min = 300;
+					spd = 0.75;
+					ballSize = 10;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num3)
+				{
+					m_diff = 2;
+					m_viewDist = 300;
+					int rnd_max = 700;
+					int rnd_min = 300;
+					spd = 1;
+					ballSize = 8;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num4)
+				{
+					m_diff = 1;
+					m_viewDist = 100;
+					int rnd_max = 300;
+					int rnd_min = 0;
+					spd = 1.5;
+					ballSize = 6;
+				}
+
+
+				if (m_diff != 0)
+					//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+					m_gStates = GameStates::playing;
+			}
+			//m_gStates = GameStates::mPlayer
+			if (m_gStates == 3)
+			{
+				//if (event.type == sf::Event::Closed) m_window.close();
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					m_gStates = GameStates::mainMenu;
+
+				//turn off AI
+				ai = false;
+				
+				//m_diff = 0;
 				m_gStates = GameStates::playing;
+
+			}
+
+			//m_gStates = GameStates::top10
+			if (m_gStates == 7)
+			{
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					m_gStates = GameStates::mainMenu;
+
+				m_gStates = GameStates::top10;
+
+			}
 		}
-		if (m_gStates == 1)
+
+		//m_gStates = GameStates::playing
+		if (m_gStates == 4)
 		{
+			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				m_gStates = GameStates::mainMenu;*/
 			//cout << m_diff;
 		// ADD YOUR CODE HERE !!!
 		
@@ -180,6 +276,13 @@ void GameEngine::run()
 			cout << "UP key pressed" << endl;
 			m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 		}*/
+		
+		//menu , pause in future	
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			m_gStates = GameStates::mainMenu;
+		}	
+		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
 			m_paddle1.moveUp(dt);
@@ -230,7 +333,7 @@ void GameEngine::run()
 			//random AI
 					// Get the mouse position relative to the desktop
 			//sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
-			if (ai == 1)
+			if (ai)
 			{	random_device rd;
 				mt19937 gen(rd());
 				//int rnd_max = 127 + mousePositionDesktop.y;
@@ -358,7 +461,7 @@ void GameEngine::run()
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
-				if (ai == 1)
+				if (ai)
 				{
 					random_device rd;
 					mt19937 gen(rd());
@@ -381,7 +484,7 @@ void GameEngine::run()
 
 			if (m_paddle2.getBounds().contains(m_ball.getPosition()))
 			{
-				if (ai == 1)
+				if (ai)
 				{
 					random_device rd;
 					mt19937 gen(rd());
@@ -404,7 +507,7 @@ void GameEngine::run()
 			///////bounce ball2
 			if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
 			{
-				if (ai == 1)
+				if (ai)
 				{
 					random_device rd;
 					mt19937 gen(rd());
@@ -427,7 +530,7 @@ void GameEngine::run()
 
 			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
 			{
-				if (ai == 1)
+				if (ai)
 				{
 					random_device rd;
 					mt19937 gen(rd());

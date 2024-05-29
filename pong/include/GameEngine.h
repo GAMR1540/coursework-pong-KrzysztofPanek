@@ -25,14 +25,14 @@ private:
 
 	int m_p1Score;
 	int m_p2Score;
-	int ai;
+	bool ai;
 	int rnd_max;
 	int m_diff;
 	int m_viewDist;
 	int m_defend;
 	bool ball2;
 	static const int m_maxScore = 3;
-	enum GameStates {intro, mainMenu, playing, gameOver, gamePaused};
+	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top10};
 	GameStates m_gStates;
 public:
 	GameEngine(sf::RenderWindow& window);
