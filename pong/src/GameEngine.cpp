@@ -88,7 +88,7 @@ void GameEngine::update()
 	{
 	case GameEngine::intro:
 		//ss << "Press the Space\nkey to start";
-		ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1 - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
+		ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
 		/*ss >> m_diff;*/
 		//switch (m_diff)
 		//{
@@ -159,8 +159,8 @@ void GameEngine::run()
 			{
 				m_diff = 3;
 				m_viewDist = 300;
-				int rnd_max = 800;
-				int rnd_min = 600;
+				int rnd_max = 750;
+				int rnd_min = 500;
 				spd = 0.5;
 			}
 			if (event.key.code == sf::Keyboard::Num3)
@@ -168,14 +168,14 @@ void GameEngine::run()
 				m_diff = 2;
 				m_viewDist = 300;
 				int rnd_max = 750;
-				int rnd_min = 500;
+				int rnd_min = 300;
 				spd = 1;
 			}			
 			if (event.key.code == sf::Keyboard::Num4)
 			{
 				m_diff = 1;
 				m_viewDist = 100;
-				int rnd_max = 200;
+				int rnd_max = 300;
 				int rnd_min = 0;
 				spd = 2;
 			}
