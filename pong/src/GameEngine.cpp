@@ -11,7 +11,8 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::Red),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow)
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
+	m_powerup(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Cyan),
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
@@ -20,6 +21,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_viewDist = 0;
 	m_defend = 0;
 	rnd_max = 800;
+	ball2=true;
 
 
 	m_gStates = GameStates::intro;
@@ -152,22 +154,22 @@ void GameEngine::run()
 				m_viewDist = 600;
 				int rnd_max = 800;
 				int rnd_min = 600;
-				spd = 0.25;
+				spd = 0.5;
 
 			}
 			if (event.key.code == sf::Keyboard::Num2)
 			{
 				m_diff = 3;
 				m_viewDist = 300;
-				int rnd_max = 750;
-				int rnd_min = 500;
-				spd = 0.5;
+				int rnd_max = 700;
+				int rnd_min = 300;
+				spd = 0.75;
 			}
 			if (event.key.code == sf::Keyboard::Num3)
 			{
 				m_diff = 2;
 				m_viewDist = 300;
-				int rnd_max = 750;
+				int rnd_max = 700;
 				int rnd_min = 300;
 				spd = 1;
 			}			
@@ -177,7 +179,7 @@ void GameEngine::run()
 				m_viewDist = 100;
 				int rnd_max = 300;
 				int rnd_min = 0;
-				spd = 2;
+				spd = 1.5;
 			}
 							
 				
@@ -220,6 +222,24 @@ void GameEngine::run()
 			//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 		}
 
+		//Score for 2nd ball
+		//if (ball2)
+		//{
+		//	if ((m_ball2.getPosition().x < 0))
+		//	{
+		//		m_p2Score++;
+
+		//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
+		//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
+		//	}
+		//	else if ((m_ball2.getPosition().x > 800))
+		//	{
+		//		m_p1Score++;
+
+		//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
+		//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
+		//	}
+		//}
 
 		//Restet ball position
 		if ((m_ball.getPosition().x < 0)||(m_ball.getPosition().x > 800))
@@ -237,14 +257,18 @@ void GameEngine::run()
 				//int m_viewDist = dis(gen);
 				m_viewDist = dis(gen);
 				if (m_diff== 1) if (m_viewDist>720) m_viewDist = 800;
-				if (m_diff== 2) if (m_viewDist < 320 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
-				if (m_diff== 3) if (m_viewDist < 150 || (m_viewDist < 710 && m_viewDist>690)) m_viewDist = 800;
+				if (m_diff== 2) if (m_viewDist < 520 || (m_viewDist < 710 && m_viewDist>680)) m_viewDist = 800;
+				//if (m_diff== 3) if (m_viewDist < 100 || (m_viewDist < 710 && m_viewDist>700)) m_viewDist = 800;
 				if (m_diff== 4) if (m_viewDist < 32)  m_viewDist = 800;
 				cout << m_viewDist << endl; 
 			}
 			
 			m_ball.setPosition(800 / 2.f, 600 / 2.f);
-			m_ball2.setPosition(800 / 4.f, 600 / 4.f);
+			if (ball2)
+			{
+				m_ball2.setPosition(800 / 4.f, 600 / 4.f); 
+			}
+			
 
 			//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 			//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
@@ -259,7 +283,18 @@ void GameEngine::run()
 		{
 			m_paddle2.moveDown(dt / m_diff);
 		}
-
+		//AI for 2nd BALL
+		if (ball2)
+		{
+			if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y < m_paddle2.getPosition().y))
+			{
+				m_paddle2.moveUp(dt / m_diff);
+			}
+			else if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y > m_paddle2.getPosition().y))
+			{
+				m_paddle2.moveDown(dt / m_diff);
+			}
+		}
 		 
 		 
 		 
@@ -321,9 +356,12 @@ void GameEngine::run()
 
 		
 			m_ball.move(-dt, m_window);
-
-			//m_ball2.move(-dt, m_window);
-
+			if (ball2)
+			{
+				m_ball2.move(-dt, m_window);
+			}
+			
+			///bounce ball 1
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
@@ -369,11 +407,67 @@ void GameEngine::run()
 				m_ball.updateVelocity(spd);
 			}
 
+
+			///////bounce ball2
+			if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
+			{
+				if (ai == 1)
+				{
+					random_device rd;
+					mt19937 gen(rd());
+					//int rnd_max = 127 + mousePositionDesktop.y;
+					/*int rnd_max = 800;*/
+
+					uniform_int_distribution<> dis(300, rnd_max);
+					//int m_viewDist = dis(gen);
+					m_viewDist = dis(gen);
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					cout << m_viewDist << endl;
+				}
+
+				if (m_diff > 1) spd += 0.05;
+				m_ball2.updateVelocity(-spd);
+
+
+			}
+
+
+			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
+			{
+				if (ai == 1)
+				{
+					random_device rd;
+					mt19937 gen(rd());
+					//int rnd_max = 127 + mousePositionDesktop.y;
+					/*int rnd_max = 800;*/
+
+					uniform_int_distribution<> dis(300, rnd_max);
+					//int m_viewDist = dis(gen);
+					m_viewDist = dis(gen);
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					cout << m_viewDist << endl;
+				}
+
+
+				if (m_diff > 1) spd += 0.05;
+				m_ball2.updateVelocity(spd);
+			}
+
 			if (m_p1Score>19 || m_p2Score > 19)
 			{
 				m_gStates= GameEngine::gameOver;
 			}
 		
+		}
+
+		//////powerups
+		if (m_powerup.getBounds().contains(m_ball.getPosition()))
+		{
+			
+
+
+			
+			m_ball.updateVelocity(spd);
 		}
 		
 		//if (m_paddle2.getBounds().height)

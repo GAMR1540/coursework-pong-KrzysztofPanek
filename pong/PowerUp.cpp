@@ -1,4 +1,4 @@
-#include "PowerUps.h"
+#include "PowerUp.h"
 
 
 PowerUp::PowerUp(sf::Vector2f position, float radius, sf::Color color)

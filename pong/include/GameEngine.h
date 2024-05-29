@@ -3,6 +3,7 @@
 #include <sstream>
 #include "Paddle.h"
 #include "Ball.h"
+#include "PowerUp.h"
 
 class GameEngine
 {
@@ -20,6 +21,7 @@ private:
 	Ball m_ball;
 	Ball m_ball2;
 
+
 	int m_p1Score;
 	int m_p2Score;
 	int ai;
@@ -27,6 +29,7 @@ private:
 	int m_diff;
 	int m_viewDist;
 	int m_defend;
+	bool ball2;
 	static const int m_maxScore = 3;
 	enum GameStates {intro, playing, gameOver};
 	GameStates m_gStates;
