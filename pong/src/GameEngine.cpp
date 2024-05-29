@@ -6,13 +6,16 @@
 
 using namespace std;
 
+int ballSize = 8;
+
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::Red),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
-	m_powerup(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Cyan),
+	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow),
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow)//,
+	//error m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color orange(255, 160, 0)),
+	
 {
 	m_p1Score = 0;
 	m_p2Score = 0;
@@ -22,7 +25,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_defend = 0;
 	rnd_max = 800;
 	ball2=true;
-
+	
 
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
@@ -62,31 +65,8 @@ void GameEngine::update()
 {
 	// update hud
 	std::stringstream ss;
-	//if (m_diff < 0 && m_gStates != 1 )
-	//{
-	//	ss << "P.O.N.G\n\n\nChoose how smart\nis ypur opponent:\n\n1 - Amoeba\n2 - Human\n3 - Terminator\n";
-	//	switch (m_diff)
-	//	{
-	//	case 1:
-	//		m_diff = 5;
-	//		cout << "amoeba"<<endl;
-	//		break;
-	//	case 2:
-	//		m_diff = 3;
-	//		cout << "human" << endl;
-	//		break;
-	//	case 3:
-	//		m_diff = 1;
-	//		cout << "terminator" << endl;
-	//		break;
-	//	default:
-	//		break;
-	//	} 
-	//}
-	
-	//else if (m_diff > 0)
-	//{
-		switch (m_gStates)
+
+	switch (m_gStates)
 	{
 	case GameEngine::intro:
 		//ss << "Press the Space\nkey to start";
@@ -155,7 +135,7 @@ void GameEngine::run()
 				int rnd_max = 800;
 				int rnd_min = 600;
 				spd = 0.5;
-
+				ballSize = 12;
 			}
 			if (event.key.code == sf::Keyboard::Num2)
 			{
@@ -164,6 +144,7 @@ void GameEngine::run()
 				int rnd_max = 700;
 				int rnd_min = 300;
 				spd = 0.75;
+				ballSize = 10;
 			}
 			if (event.key.code == sf::Keyboard::Num3)
 			{
@@ -172,6 +153,7 @@ void GameEngine::run()
 				int rnd_max = 700;
 				int rnd_min = 300;
 				spd = 1;
+				ballSize = 8;
 			}			
 			if (event.key.code == sf::Keyboard::Num4)
 			{
@@ -180,6 +162,7 @@ void GameEngine::run()
 				int rnd_max = 300;
 				int rnd_min = 0;
 				spd = 1.5;
+				ballSize = 6;
 			}
 							
 				
@@ -258,8 +241,18 @@ void GameEngine::run()
 				m_viewDist = dis(gen);
 				if (m_diff== 1) if (m_viewDist>720) m_viewDist = 800;
 				if (m_diff== 2) if (m_viewDist < 520 || (m_viewDist < 710 && m_viewDist>680)) m_viewDist = 800;
-				//if (m_diff== 3) if (m_viewDist < 100 || (m_viewDist < 710 && m_viewDist>700)) m_viewDist = 800;
-				if (m_diff== 4) if (m_viewDist < 32)  m_viewDist = 800;
+				if (m_diff== 3) if (m_viewDist < 50) m_viewDist = 800;
+				if (m_diff == 4)
+				{
+					if (m_viewDist < 32)
+					{
+						m_viewDist = 800;
+					}
+					else if (m_viewDist >400)
+					{
+						m_viewDist = 200;
+					}
+				}
 				cout << m_viewDist << endl; 
 			}
 			
@@ -379,7 +372,7 @@ void GameEngine::run()
 					cout << m_viewDist << endl;
 				}
 
-				//spd += 0.1;
+				if (m_diff > 1) spd += 0.01;
 				m_ball.updateVelocity(-spd);
 
 				
@@ -403,7 +396,7 @@ void GameEngine::run()
 				}
 				
 				
-				//spd += 0.1;
+				if (m_diff > 1) spd += 0.01;
 				m_ball.updateVelocity(spd);
 			}
 
@@ -425,7 +418,7 @@ void GameEngine::run()
 					cout << m_viewDist << endl;
 				}
 
-				if (m_diff > 1) spd += 0.05;
+				if (m_diff > 1) spd += 0.01;
 				m_ball2.updateVelocity(-spd);
 
 
@@ -449,7 +442,7 @@ void GameEngine::run()
 				}
 
 
-				if (m_diff > 1) spd += 0.05;
+				if (m_diff > 1) spd += 0.01;
 				m_ball2.updateVelocity(spd);
 			}
 
@@ -461,15 +454,18 @@ void GameEngine::run()
 		}
 
 		//////powerups
-		if (m_powerup.getBounds().contains(m_ball.getPosition()))
-		{
-			
+		//errorif (m_powerup.getBounds().contains(m_ball.getPosition()))
+		/*{
+			//bigball
+			ballSize=20;
+			//smallball
+			ballSize=5;
 
-
-			
+			//slowball
+			spd/=2;
 			m_ball.updateVelocity(spd);
 		}
-		
+		*/
 		//if (m_paddle2.getBounds().height)
 		//{
 		//	m_ball.move(-dt, m_window);

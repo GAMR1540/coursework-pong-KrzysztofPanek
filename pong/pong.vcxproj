@@ -139,6 +139,7 @@
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <AdditionalHeaderUnitDependencies>/headerUnit[header=PowerUp.h]</AdditionalHeaderUnitDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

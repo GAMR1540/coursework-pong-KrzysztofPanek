@@ -3,7 +3,7 @@
 #include <sstream>
 #include "Paddle.h"
 #include "Ball.h"
-#include "PowerUp.h"
+//error #include "PowerUp.h"
 
 class GameEngine
 {
@@ -20,6 +20,7 @@ private:
 	Paddle m_paddle2;
 	Ball m_ball;
 	Ball m_ball2;
+	//error PowerUp pup;
 
 
 	int m_p1Score;
@@ -31,7 +32,7 @@ private:
 	int m_defend;
 	bool ball2;
 	static const int m_maxScore = 3;
-	enum GameStates {intro, playing, gameOver};
+	enum GameStates {intro, mainMenu, playing, gameOver, gamePaused};
 	GameStates m_gStates;
 public:
 	GameEngine(sf::RenderWindow& window);
