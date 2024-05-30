@@ -3,7 +3,7 @@
 #include <sstream>
 #include "Paddle.h"
 #include "Ball.h"
-//error #include "PowerUp.h"
+//#include "PowerUp.h"
 
 class GameEngine
 {
@@ -21,6 +21,8 @@ private:
 	Ball m_ball;
 	Ball m_ball2;
 	//error PowerUp pup;
+
+	//int ballSize = 800;
 
 	int ballSize;
 	int m_p1Score;
