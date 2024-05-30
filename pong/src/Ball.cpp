@@ -45,6 +45,10 @@ sf::CircleShape Ball::getShape()
 	return m_shape;
 }
 
+void Ball::setFillColor(sf::Color(cBall))
+{
+	m_shape.setFillColor(cBall);
+}
 
 
 

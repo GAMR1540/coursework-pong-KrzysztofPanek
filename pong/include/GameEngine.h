@@ -22,7 +22,7 @@ private:
 	Ball m_ball2;
 	//error PowerUp pup;
 
-
+	int ballSize;
 	int m_p1Score;
 	int m_p2Score;
 	bool ai;
@@ -31,8 +31,9 @@ private:
 	int m_viewDist;
 	int m_defend;
 	bool ball2;
+	char playerName;
 	static const int m_maxScore = 3;
-	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top10};
+	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick};
 	GameStates m_gStates;
 public:
 	GameEngine(sf::RenderWindow& window);

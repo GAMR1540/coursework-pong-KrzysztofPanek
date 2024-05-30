@@ -16,5 +16,7 @@ public:
 
 	void updateVelocity(float val);
 	sf::CircleShape getShape();
+
+	void setFillColor(sf::Color(cBall));
 };
 
