@@ -12,30 +12,30 @@ using namespace std;
 int ballSize = 8;
 
 //colors
-//float p1R = 0;
-//float p1G = 0;
-//float p1B = 0;
-//
-//float p2R = 0;
-//float p2G = 0;
-//float p2B = 0;
-//
-//float ballR = 0;
-//float ballG = 0;
-//float ballB = 0;
-//
-//sf::Color cP1(p1R, p1G, p1B);
-//sf::Color cP2(p2R, p2G, p2B);
-//sf::Color cBall(ballR, ballG, ballB);
-//
+float p1R = 0;
+float p1G = 0;
+float p1B = 0;
+
+float p2R = 0;
+float p2G = 0;
+float p2B = 0;
+
+float ballR = 0;
+float ballG = 0;
+float ballB = 0;
+
+sf::Color cP1(p1R, p1G, p1B);
+sf::Color cP2(p2R, p2G, p2B);
+sf::Color cBall(ballR, ballG, ballB);
+
 
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
-	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
-	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::Magenta),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Cyan),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow)//,
+	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
+	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
+	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)//,
 	//error m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color orange(255, 160, 0)),
 	
 {
@@ -190,7 +190,7 @@ void GameEngine::run()
 		dt = m_clock.restart().asSeconds();
 		if (m_gStates == 0)
 		{
-			//cout << "ballR " << ballR << endl;
+			cout << "ballR " << ballR << endl;
 			sf::Color c(r, g, b);
 			m_hud.setFillColor(c);
 /*			countD--;
@@ -200,9 +200,9 @@ void GameEngine::run()
 			//else if (b < 255) b += 0.1;
 			else
 			{
-				//g = 255;
-				//b = 255;
-				//sf::Color c(r, g, b);
+				g = 255;
+				b = 255;
+				sf::Color c(r, g, b);
 				m_hud.setFillColor(c);
 				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
 				m_hud.setPosition((m_window.getSize().x / 2.f) - 70.f, 10);
@@ -358,7 +358,7 @@ void GameEngine::run()
 				cout << "UP key pressed" << endl;
 				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 			}*/
-			cout << "ball"<<ballSize<<endl;
+
 			//menu , pause in future	
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
@@ -536,11 +536,11 @@ void GameEngine::run()
 			}*/
 
 			//move balls
-			//if (ballR==255 && ballG==255)
-			//{
-			//	sf::Color cBall(ballR, ballG, ballB);
-			//	m_ball.setFillColor(cBall);
-			//	cout << "ballR " << ballR<<endl;
+			if (ballR==255 && ballG==255)
+			{
+				sf::Color cBall(ballR, ballG, ballB);
+				m_ball.setFillColor(cBall);
+				cout << "ballR " << ballR<<endl;
 				//sf::Color c(r, g, b);
 				if (countD > 0)
 				{
@@ -564,14 +564,14 @@ void GameEngine::run()
 
 					}
 				}
-			//}
-			//else
-			//{
-			//	ballR++;
-			//	ballG++;
-			//	sf::Color cBall(ballR, ballG, ballB);
-			//	m_ball.setFillColor(cBall);
-			//}
+			}
+			else
+			{
+				ballR++;
+				ballG++;
+				sf::Color cBall(ballR, ballG, ballB);
+				m_ball.setFillColor(cBall);
+			}
 			///bounce ball 1
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
