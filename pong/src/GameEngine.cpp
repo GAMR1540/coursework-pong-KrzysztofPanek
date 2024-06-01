@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int ballSize = 8;
+//int ballSize = 8;
 
 //colors
 float p1R = 0;
@@ -32,11 +32,15 @@ sf::Color cBall(ballR, ballG, ballB);
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
-	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
+	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
+	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Red),
+	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow)
+	/*m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)//,
-	//error m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color orange(255, 160, 0)),
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
+	//m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color orange(255, 160, 0)),
 	
 {
 	m_p1Score = 0;
@@ -69,10 +73,13 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 void GameEngine::draw()
 {
 	m_window.clear();
-	m_paddle1.draw(m_window);
-	m_paddle2.draw(m_window);
-	m_ball.draw(m_window);
-	m_ball2.draw(m_window);
+	if (m_gStates == 4)
+	{
+		m_paddle1.draw(m_window);
+		m_paddle2.draw(m_window);
+		m_ball.draw(m_window);
+		m_ball2.draw(m_window);
+	}
 	m_window.draw(m_hud);
 	m_window.display();
 }
@@ -188,22 +195,28 @@ void GameEngine::run()
 	while (m_window.isOpen())
 	{
 		dt = m_clock.restart().asSeconds();
+		cout << ballSize << endl;
 		if (m_gStates == 0)
 		{
-			cout << "ballR " << ballR << endl;
-			sf::Color c(r, g, b);
-			m_hud.setFillColor(c);
+			//cout << "ballR " << ballR << endl;
+
 /*			countD--;
 			cout << countD << endl*/;
-			if (r < 255) r+=0.025;
+			
+			if (r < 255) 
+			{
+				r+=0.05;
+				sf::Color c(r, g, b);
+				m_hud.setFillColor(c);
+			}
 			//else if (g < 255) g += 0.1;
 			//else if (b < 255) b += 0.1;
 			else
 			{
-				g = 255;
-				b = 255;
-				sf::Color c(r, g, b);
-				m_hud.setFillColor(c);
+				//g = 255;
+				//b = 255;
+				//sf::Color c(r, g, b);
+				//m_hud.setFillColor(c);
 				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
 				m_hud.setPosition((m_window.getSize().x / 2.f) - 70.f, 10);
 				m_hud.setCharacterSize(40);
@@ -536,11 +549,11 @@ void GameEngine::run()
 			}*/
 
 			//move balls
-			if (ballR==255 && ballG==255)
-			{
-				sf::Color cBall(ballR, ballG, ballB);
-				m_ball.setFillColor(cBall);
-				cout << "ballR " << ballR<<endl;
+			//if (ballR==255 && ballG==255)
+			//{
+				//sf::Color cBall(ballR, ballG, ballB);
+				//m_ball.setFillColor(cBall);
+				//cout << "ballR " << ballR<<endl;
 				//sf::Color c(r, g, b);
 				if (countD > 0)
 				{
@@ -564,14 +577,14 @@ void GameEngine::run()
 
 					}
 				}
-			}
-			else
-			{
-				ballR++;
-				ballG++;
-				sf::Color cBall(ballR, ballG, ballB);
-				m_ball.setFillColor(cBall);
-			}
+			//}
+			//else
+			//{
+			//	ballR++;
+			//	ballG++;
+			//	sf::Color cBall(ballR, ballG, ballB);
+			//	m_ball.setFillColor(cBall);
+			//}
 			///bounce ball 1
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))

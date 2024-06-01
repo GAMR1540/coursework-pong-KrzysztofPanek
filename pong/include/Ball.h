@@ -18,5 +18,6 @@ public:
 	sf::CircleShape getShape();
 
 	void setFillColor(sf::Color(cBall));
+	
 };
 

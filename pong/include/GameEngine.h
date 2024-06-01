@@ -3,7 +3,7 @@
 #include <sstream>
 #include "Paddle.h"
 #include "Ball.h"
-//#include "PowerUp.h"
+#include "PowerUp.h"
 
 class GameEngine
 {
@@ -20,11 +20,11 @@ private:
 	Paddle m_paddle2;
 	Ball m_ball;
 	Ball m_ball2;
-	//error PowerUp pup;
+	PowerUp m_powerUp;
 
 	//int ballSize = 800;
 
-	int ballSize;
+	
 	int m_p1Score;
 	int m_p2Score;
 	bool ai;
@@ -33,7 +33,8 @@ private:
 	int m_viewDist;
 	int m_defend;
 	bool ball2;
-	char playerName;
+	char playerName[6] = "D.M.U";
+	float ballSize=8;
 	static const int m_maxScore = 3;
 	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick};
 	GameStates m_gStates;
@@ -43,5 +44,6 @@ public:
 	void update();
 	void rand128();
 	void run();
+
 };
 
