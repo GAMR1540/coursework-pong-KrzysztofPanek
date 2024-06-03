@@ -35,12 +35,12 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Red),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow)
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
 	/*m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
-	//m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color orange(255, 160, 0)),
+	m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color::Green)
 	
 {
 	m_p1Score = 0;
