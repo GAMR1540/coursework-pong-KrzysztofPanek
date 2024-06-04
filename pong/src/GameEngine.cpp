@@ -64,9 +64,11 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	//sf::Color orange(255, 160, 0);
 	sf::Color c(0, 0, 0);
 
-	//create sound buffer for boucing ball sound
+	//create sound buffers 
 	m_ballSound.setBuffer(m_ballBuffer);
 	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_snd.wav");
+	m_goalSound.setBuffer(m_goalBuffer);
+	m_goalBuffer.loadFromFile(".\\assets\\audio\\goal_snd.wav");
 
 
 	m_gStates = GameStates::intro;
@@ -407,6 +409,8 @@ void GameEngine::run()
 			// increse player score
 			if ((m_ball.getPosition().x < 0))
 			{
+				m_goalSound.play();
+				Sleep(1000);
 				countD = 2000;
 				m_p2Score++;
 
@@ -415,6 +419,8 @@ void GameEngine::run()
 			}
 			else if ((m_ball.getPosition().x > 800))
 			{
+				m_goalSound.play();
+				Sleep(1000);
 				countD = 2000;
 				m_p1Score++;
 

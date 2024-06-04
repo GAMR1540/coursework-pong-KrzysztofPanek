@@ -32,6 +32,9 @@
     <ClCompile Include="src\PowerUp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\pong_goal.wav">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </Media>
     <Media Include="..\..\..\pong_snd.wav">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Media>

@@ -12,8 +12,10 @@ private:
 	sf::Font m_font;
 	sf::Text m_hud;
 	sf::SoundBuffer m_ballBuffer;
+	sf::SoundBuffer m_goalBuffer;
 	
 	sf::Sound m_ballSound;
+	sf::Sound m_goalSound;
 	sf::Clock m_clock;
 
 
