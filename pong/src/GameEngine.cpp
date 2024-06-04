@@ -152,7 +152,7 @@ void GameEngine::draw()
 				powerUp_set = true;
 			}
 
-
+			 
 			m_powerUp.setPosition(powerUp_x, powerUp_y);
 
 			//drwa powrup bg
