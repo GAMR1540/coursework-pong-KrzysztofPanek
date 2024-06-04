@@ -64,6 +64,10 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	//sf::Color orange(255, 160, 0);
 	sf::Color c(0, 0, 0);
 
+	//create sound buffer for boucing ball sound
+	m_ballSound.setBuffer(m_ballBuffer);
+	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_snd.wav");
+
 
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
@@ -601,7 +605,8 @@ void GameEngine::run()
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
-
+				
+				m_ballSound.play();
 
 				if (ai)
 				{
@@ -640,7 +645,7 @@ void GameEngine::run()
 
 			if (m_paddle2.getBounds().contains(m_ball.getPosition()))
 			{
-
+				m_ballSound.play();
 				if (ai)
 				{
 					
@@ -678,7 +683,7 @@ void GameEngine::run()
 			///////bounce ball2
 			if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
 			{
-
+				m_ballSound.play();
 				if (ai)
 				{
 					
@@ -717,7 +722,7 @@ void GameEngine::run()
 			}
 			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
 			{
-
+				m_ballSound.play();
 
 				if (ai)
 				{

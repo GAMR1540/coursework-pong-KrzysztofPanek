@@ -31,6 +31,11 @@
     <ClCompile Include="src\Paddle.cpp" />
     <ClCompile Include="src\PowerUp.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\pong_snd.wav">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </Media>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

@@ -12,6 +12,7 @@ private:
 	sf::Font m_font;
 	sf::Text m_hud;
 	sf::SoundBuffer m_ballBuffer;
+	
 	sf::Sound m_ballSound;
 	sf::Clock m_clock;
 
@@ -42,6 +43,8 @@ private:
 	static const int m_maxScore = 3;
 	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick};
 	GameStates m_gStates;
+
+
 public:
 	GameEngine(sf::RenderWindow& window);
 	void draw();
