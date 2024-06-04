@@ -41,10 +41,11 @@ int scored_timeout = 1200;
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
+	//m_halfWayLife(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Red),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow),
+	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
+	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow),
 	/*m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
@@ -54,13 +55,14 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 {
 	powerUp_create = 100;
 	powerUp_exist = false;
+	powerUp_set = false;
 	m_p1Score = 0;
 	m_p2Score = 0;
 	ai = false;
 	m_diff = 0;
 	m_viewDist = 0;
 	m_defend = 0;
-	rnd_max = 800;
+	rnd_max = 600;
 	ball2=true;
 	introSound_done = false;
 	char playerName[6] = "D.M.U";
@@ -101,18 +103,78 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 void GameEngine::draw()
 {
 	m_window.clear();
-	if (m_gStates == 4)
+	if (m_gStates > 0 && m_gStates < 4)
 	{
+		m_hud.setPosition((m_window.getSize().x / 2.f) - 90.f, 10);
+		//draw menu side lines
+		sf::RectangleShape sideLineL(sf::Vector2f(8, 600));
+		sf::RectangleShape sideLineR(sf::Vector2f(8, 600));
+		sideLineL.setFillColor(sf::Color(100, 100, 100));
+		sideLineR.setFillColor(sf::Color(100, 100, 100));
+		sideLineL.setPosition(200, 0);
+		m_window.draw(sideLineL);
+		sideLineR.setPosition(600, 0);
+		m_window.draw(sideLineR);
+	}
+		
+		if (m_gStates == 4)
+	{
+		//draw halfway line
+		sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
+		halfWayLine.setFillColor(sf::Color(100, 100, 100));
+		halfWayLine.setPosition(400, 0);
+		m_window.draw(halfWayLine);
+
+		sf::CircleShape centerCircle(50);
+		centerCircle.setFillColor(sf::Color(100, 100, 100));
+		centerCircle.setPosition(355, 250);
+		m_window.draw(centerCircle);
+
+		sf::CircleShape centerCircle1(42);
+		centerCircle1.setFillColor(sf::Color(0, 0, 0));
+		centerCircle1.setPosition(360, 260);
+		m_window.draw(centerCircle1);
+
+		if (powerUp_create < 16)
+		{
+			powerUp_exist = true;
+			//draw halfway line
+			sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
+			halfWayLine.setFillColor(sf::Color(100, 100, 100));
+			halfWayLine.setPosition(400, 0);
+			m_window.draw(halfWayLine);
+			if (powerUp_set)
+			{
+				uniform_int_distribution<> disPX(100, 700);
+				int powerUp_x = disPX(gen);
+				uniform_int_distribution<> disPY(100, 500);
+				int powerUp_y = disPY(gen);
+				powerUp_set = true;
+			}
+
+
+			m_powerUp.setPosition(powerUp_x, powerUp_y);
+
+			//drwa powrup bg
+			uniform_int_distribution<> disPbgX(-20, 20);
+			int powerUp_shakeX = disPbgX(gen);
+			uniform_int_distribution<> disPbgY(-20, 20);
+			int powerUp_shakeY = disPbgY(gen);
+			m_powerUp.setPosition(powerUp_x+ powerUp_shakeX, powerUp_y+ powerUp_shakeY);
+			/*sf::RectangleShape powerUp_bg(sf::Vector2f(50, 50));
+			powerUp_bg.setFillColor(sf::Color::Yellow);
+			powerUp_bg.setPosition(powerUp_x- powerUp_bgX, powerUp_y- powerUp_bgY);
+			m_window.draw(powerUp_bg)*/;
+
+			
+		}
+		if (powerUp_exist) m_powerUp.draw(m_window);
 		m_paddle1.draw(m_window);
 		m_paddle2.draw(m_window);
 		m_ball.draw(m_window);
 		m_ball2.draw(m_window);
-		if (powerUp_create < 16)
-		{
-			powerUp_exist = true;
-			m_powerUp.draw(m_window);
-		}
 
+		
 	}
 	m_window.draw(m_hud);
 	m_window.display();
@@ -240,6 +302,7 @@ void GameEngine::run()
 		////cout << ballSize << endl;
 		if (m_gStates == 0)
 		{
+
 			//play intro sound once
 			if (introSound_done == false)
 			{
@@ -272,7 +335,7 @@ void GameEngine::run()
 				//sf::Color c(r, g, b);
 				//m_hud.setFillColor(c);
 				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 70.f, 10);
+				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
 				m_hud.setCharacterSize(40);
 				m_gStates = GameStates::mainMenu;
 			}
@@ -301,6 +364,9 @@ void GameEngine::run()
 			//m_gStates = GameStates::mainMenu
 			if (m_gStates == 1)
 			{
+
+
+
 				//play music in the loop
 				if (m_drumsSound.getStatus() != sf::Sound::Playing) m_drumsSound.play();
 	/*			if (introSound_done == true && (m_introSound.getStatus() != sf::Sound::Playing) && (m_drumsSound.getStatus() != sf::Sound::Playing))
@@ -357,7 +423,7 @@ void GameEngine::run()
 				{
 					m_diff = 3;
 					m_viewDist = 300;
-					int rnd_max = 700;
+					int rnd_max = 600;
 					int rnd_min = 300;
 					spd = 1;//0.75;
 					ballSize = 10;
@@ -472,7 +538,6 @@ void GameEngine::run()
 			cout << scored_timeout << endl;
 
 
-
 			// increse player score
 			if ((m_ball.getPosition().x < 0))
 			{
@@ -482,6 +547,7 @@ void GameEngine::run()
 				Sleep(400);
 				countD = 2000;
 				m_p2Score++;
+
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 			}
@@ -496,6 +562,18 @@ void GameEngine::run()
 
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
+			}
+			//Paddle1 - Human Player move paddle
+			//This setup prevent to go paddle outside screen when score
+			else if (m_paddle1.getPosition().y >= 50 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
+			{
+				m_paddle1.moveUp(dt);
+				cout << m_paddle1.getPosition().y << endl;
+			}
+			else if (m_paddle1.getPosition().y <= 550 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
+			{
+				m_paddle1.moveDown(dt);
+				cout << m_paddle1.getPosition().y << endl;
 			}
 
 			//Score for 2nd ball
@@ -549,7 +627,8 @@ void GameEngine::run()
 					////cout << m_viewDist << endl;
 				}
 
-
+			
+				
 				//Set position of Balls (if 2nd exist)
 				if (ball2)
 				{
@@ -593,6 +672,63 @@ void GameEngine::run()
 				}
 			}
 
+
+
+
+			//random AI
+			// Get the mouse position relative to the desktop
+			//sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
+			//random_device rd;
+			//mt19937 gen(rd());
+			//int rnd_max = 127 + mousePositionDesktop.y;
+			//uniform_int_distribution<> dis(0, rnd_max);
+			//int random_number = dis(gen);
+			////cout << random_number << endl;
+			////if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
+			//if (random_number > rnd_max-rnd_max*0.2)
+			//{
+			//	//move_up
+			//	m_paddle2.moveUp(dt/5);
+			//	//Sleep(100);
+			//}
+			////else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
+			//else if (random_number < rnd_max * 0.21)
+			//{
+			//	//move_down
+
+			//	m_paddle2.moveDown(dt/5);
+			//	//Sleep(100);
+			//}
+			/*
+			//if (random_number > rnd_max * 0.95)
+			if (random_number > 200)
+			{
+				//random AI -- easy mode
+
+					//if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
+				if (random_number > rnd_max - rnd_max * 0.5)
+				{
+					//move_up
+					m_paddle2.moveUp(dt / 5);
+					//Sleep(100);
+				}
+				//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
+				else if (random_number < rnd_max * 0.51)
+				{
+					//move_down
+
+					m_paddle2.moveDown(dt / 5);
+					//Sleep(100);
+				}
+			}
+			else
+			{
+				//impossible
+				//m_paddle2.getPosition.y() = m_ball.getPosition.y();
+				//m_paddle2.setPosition(m_paddle2.getPosition().x, m_ball.getPosition().y);
+
+
+			}*/
 
 			//move balls
 			//if (ballR==255 && ballG==255)
@@ -746,20 +882,25 @@ void GameEngine::run()
 
 			}
 
+			if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball2.getPosition())))
+			{
+				//choose random power up
+				uniform_int_distribution<> pwr(0, 5);
+				int pwr_choose = pwr(gen);
 
 				if (pwr_choose < 3)
 				{
 					//m_paddle1.setSize(m_size);
 					m_ball2.updateVelocity(-2);
 					m_ball.updateVelocity(0.5);
-				}				
+				}
 				//else if (pwr_choose < 3)
 				//{
 				//	//m_paddle1.setSize(m_size);
 				//	m_ball2.updateVelocity(0.5);
 				//	m_ball.updateVelocity(2);
 				//}
-				else 
+				else
 				{
 					m_ball2.updateVelocity(-0.5);
 					m_ball.updateVelocity(2);
@@ -778,14 +919,14 @@ void GameEngine::run()
 					//m_paddle1.setSize(m_size);
 					m_ball2.updateVelocity(2);
 					m_ball.updateVelocity(-0.5);
-				}				
+				}
 				//else if (pwr_choose < 3)
 				//{
 				//	//m_paddle1.setSize(m_size);
 				//	m_ball2.updateVelocity(0.5);
 				//	m_ball.updateVelocity(2);
 				//}
-				else 
+				else
 				{
 					m_ball2.updateVelocity(0.5);
 					m_ball.updateVelocity(-2);
@@ -793,6 +934,46 @@ void GameEngine::run()
 
 				powerUp_exist = false;
 			}
+
+			/////////////////////////////////////////
+			//if (centerCircle.getBounds().contains(m_ball2.getPosition()))
+			//{
+			//	m_ballSound.play();
+
+			//	if (ai)
+			//	{
+			//		
+			//		//int rnd_max = 127 + mousePositionDesktop.y;
+			//		/*int rnd_max = 800;*/
+
+			//		uniform_int_distribution<> dis(300, rnd_max);
+			//		//int m_viewDist = dis(gen);
+			//		m_viewDist = dis(gen);
+			//		if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+			//		//cout << m_viewDist << endl;
+			//	}
+
+
+			//	if (m_diff > 1) spd += 0.01;
+			//	m_ball2.updateVelocity(spd);
+			//	if (powerUp_exist == false)
+			//	{
+			//		uniform_int_distribution<> dis(0, 128);
+			//		powerUp_create = dis(gen);
+			//		if (powerUp_create < 16)
+			//		{
+			//			uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+			//			powerUp_x = powerX_dis(gen);
+			//			uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+			//			powerUp_y = powerY_dis(gen);
+			//		}
+			//		cout << powerUp_create << endl;
+			//		cout << powerUp_exist << endl;
+			//	}
+			//}			
+			/////////////////////////
+
+
 			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
 			{
 				m_ballSound.play();
