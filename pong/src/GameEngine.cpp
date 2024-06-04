@@ -845,68 +845,70 @@ void GameEngine::run()
 				}
 			}
 
-
-			///////bounce ball2
-			if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
+			if (ball2)
 			{
-				m_ballSound.play();
-				if (ai)
+				///////bounce ball2
+				if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
 				{
-					
-					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = 800;*/
-
-					uniform_int_distribution<> dis(300, rnd_max);
-					//int m_viewDist = dis(gen);
-					m_viewDist = dis(gen);
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
-					//cout << m_viewDist << endl;
-				}
-
-				if (m_diff > 1) spd += 0.01;
-				m_ball2.updateVelocity(-spd);
-				if (powerUp_exist == false)
-				{
-					uniform_int_distribution<> dis(0, 128);
-					powerUp_create = dis(gen);
-					if (powerUp_create < 16)
+					m_ballSound.play();
+					if (ai)
 					{
-						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
-						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
-						powerUp_y = powerY_dis(gen);
+
+						//int rnd_max = 127 + mousePositionDesktop.y;
+						/*int rnd_max = 800;*/
+
+						uniform_int_distribution<> dis(300, rnd_max);
+						//int m_viewDist = dis(gen);
+						m_viewDist = dis(gen);
+						if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+						//cout << m_viewDist << endl;
 					}
-					cout << powerUp_create << endl;
-					cout << powerUp_exist << endl;
+
+					if (m_diff > 1) spd += 0.01;
+					m_ball2.updateVelocity(-spd);
+					if (powerUp_exist == false)
+					{
+						uniform_int_distribution<> dis(0, 128);
+						powerUp_create = dis(gen);
+						if (powerUp_create < 16)
+						{
+							uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+							powerUp_x = powerX_dis(gen);
+							uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+							powerUp_y = powerY_dis(gen);
+						}
+						cout << powerUp_create << endl;
+						cout << powerUp_exist << endl;
+					}
 				}
-
-			}
-
-			if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball2.getPosition())))
-			{
-				//choose random power up
-				uniform_int_distribution<> pwr(0, 5);
-				int pwr_choose = pwr(gen);
-
-				if (pwr_choose < 3)
+			
+			 
+				if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball2.getPosition())))
 				{
-					//m_paddle1.setSize(m_size);
-					m_ball2.updateVelocity(-2);
-					m_ball.updateVelocity(0.5);
-				}
-				//else if (pwr_choose < 3)
-				//{
-				//	//m_paddle1.setSize(m_size);
-				//	m_ball2.updateVelocity(0.5);
-				//	m_ball.updateVelocity(2);
-				//}
-				else
-				{
-					m_ball2.updateVelocity(-0.5);
-					m_ball.updateVelocity(2);
-				}
+					//choose random power up
+					uniform_int_distribution<> pwr(0, 5);
+					int pwr_choose = pwr(gen);
 
-				powerUp_exist = false;
+					if (pwr_choose < 3)
+					{
+						//m_paddle1.setSize(m_size);
+						m_ball2.updateVelocity(-2);
+						m_ball.updateVelocity(0.5);
+					}
+					//else if (pwr_choose < 3)
+					//{
+					//	//m_paddle1.setSize(m_size);
+					//	m_ball2.updateVelocity(0.5);
+					//	m_ball.updateVelocity(2);
+					//}
+					else
+					{
+						m_ball2.updateVelocity(-0.5);
+						m_ball.updateVelocity(2);
+					}
+
+					powerUp_exist = false;
+				}
 			}
 			if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball.getPosition())))
 			{
