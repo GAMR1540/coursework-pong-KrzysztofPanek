@@ -12,10 +12,16 @@ private:
 	sf::Font m_font;
 	sf::Text m_hud;
 	sf::SoundBuffer m_ballBuffer;
-	sf::SoundBuffer m_goalBuffer;
+	sf::SoundBuffer m_goalBuffer;	
+	sf::SoundBuffer m_introBuffer;
+	sf::SoundBuffer m_goverBuffer;
+	sf::SoundBuffer m_SoundtrackBuffer;
 	
 	sf::Sound m_ballSound;
-	sf::Sound m_goalSound;
+	sf::Sound m_goalSound;	
+	sf::Sound m_introSound;
+	sf::Sound m_goverSound;
+	sf::Sound m_SoundtrackSnd;
 	sf::Clock m_clock;
 
 
@@ -32,6 +38,7 @@ private:
 	//int powerUp_x;
 	//int powerUp_y;
 
+	bool introSnd_done;
 	int m_p1Score;
 	int m_p2Score;
 	bool ai;

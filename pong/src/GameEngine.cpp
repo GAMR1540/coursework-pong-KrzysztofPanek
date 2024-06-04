@@ -60,15 +60,22 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_defend = 0;
 	rnd_max = 800;
 	ball2=true;
+	introSnd_done = false;
 	char playerName[6] = "D.M.U";
 	//sf::Color orange(255, 160, 0);
 	sf::Color c(0, 0, 0);
 
 	//create sound buffers 
 	m_ballSound.setBuffer(m_ballBuffer);
-	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_snd.wav");
+	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_bounce.wav");
 	m_goalSound.setBuffer(m_goalBuffer);
-	m_goalBuffer.loadFromFile(".\\assets\\audio\\goal_snd.wav");
+	m_goalBuffer.loadFromFile(".\\assets\\audio\\pong_goal.wav");	
+	m_goverSound.setBuffer(m_goverBuffer);
+	m_goverBuffer.loadFromFile(".\\assets\\audio\\pong_gover.wav");	
+	m_introSound.setBuffer(m_introBuffer);
+	m_introBuffer.loadFromFile(".\\assets\\audio\\pong_intro.wav");	
+	m_SoundtrackSnd.setBuffer(m_SoundtrackBuffer);
+	m_SoundtrackBuffer.loadFromFile(".\\assets\\audio\\pong_rockloop0.wav");
 
 
 	m_gStates = GameStates::intro;
@@ -250,7 +257,12 @@ void GameEngine::run()
 			//m_gStates = GameStates::intro
 			if (m_gStates == 0)
 			{
-
+				if (introSnd_done == false)
+				{ 
+					m_introSound.play();
+					introSnd_done = true;
+				}
+				
 				/*sf::Color c(r, g, b);
 				m_hud.setFillColor(c);*/
 
@@ -764,6 +776,7 @@ void GameEngine::run()
 
 			if (m_p1Score>19 || m_p2Score > 19)
 			{
+				m_goverSound.play();
 				m_gStates= GameEngine::gameOver;
 			}
 		
