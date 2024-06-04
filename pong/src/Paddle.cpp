@@ -62,6 +62,11 @@ void Paddle::setSpeed(float speed)
 	m_speed = speed;
 }
 
+//void Paddle::setSize(sf::Vector2f size)
+//{
+//	m_size = size;
+//}
+
 float Paddle::getSpeed()
 {
 	return m_speed;

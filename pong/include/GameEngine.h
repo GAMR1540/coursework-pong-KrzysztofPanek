@@ -37,6 +37,7 @@ private:
 
 	int powerUp_create;
 	bool powerUp_exist;
+	bool powerUp_set;
 	//int powerUp_x;
 	//int powerUp_y;
 

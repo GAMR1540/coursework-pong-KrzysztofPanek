@@ -15,6 +15,7 @@ public:
 	sf::FloatRect getBounds() const;
 	sf::RectangleShape getShape();
 
+	void setPosition(float x, float y);
 	void setSpeed(float speed);
 	float getSpeed();
 	void moveUp(float dt);
