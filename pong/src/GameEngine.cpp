@@ -60,7 +60,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_diff = 0;
 	m_viewDist = 0;
 	m_defend = 0;
-	rnd_max = 800;
+	rnd_max = 600;
 	ball2=true;
 	introSound_done = false;
 	char playerName[6] = "D.M.U";
@@ -164,9 +164,9 @@ void GameEngine::draw()
 			powerUp_bg.setPosition(powerUp_x- powerUp_bgX, powerUp_y- powerUp_bgY);
 			m_window.draw(powerUp_bg)*/;
 
-			if (powerUp_exist) m_powerUp.draw(m_window);
+			
 		}
-
+		if (powerUp_exist) m_powerUp.draw(m_window);
 		m_paddle1.draw(m_window);
 		m_paddle2.draw(m_window);
 		m_ball.draw(m_window);
@@ -418,7 +418,7 @@ void GameEngine::run()
 				{
 					m_diff = 3;
 					m_viewDist = 300;
-					int rnd_max = 700;
+					int rnd_max = 600;
 					int rnd_min = 300;
 					spd = 0.75;
 					ballSize = 10;
@@ -427,7 +427,7 @@ void GameEngine::run()
 				{
 					m_diff = 2;
 					m_viewDist = 300;
-					int rnd_max = 700;
+					int rnd_max = 500;
 					int rnd_min = 300;
 					spd = 1;
 					ballSize = 8;
@@ -862,7 +862,7 @@ void GameEngine::run()
 			}
 
 
-			if (m_powerUp.getBounds().contains(m_ball2.getPosition()))
+			if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball2.getPosition())))
 			{
 				//choose random power up
 				uniform_int_distribution<> pwr(0, 5);
