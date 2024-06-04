@@ -24,7 +24,11 @@ private:
 
 	//int ballSize = 800;
 
-	
+	int powerUp_create;
+	bool powerUp_exist;
+	//int powerUp_x;
+	//int powerUp_y;
+
 	int m_p1Score;
 	int m_p2Score;
 	bool ai;

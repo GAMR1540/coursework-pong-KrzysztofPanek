@@ -28,6 +28,13 @@ sf::Color cP1(p1R, p1G, p1B);
 sf::Color cP2(p2R, p2G, p2B);
 sf::Color cBall(ballR, ballG, ballB);
 
+// initial powerUp position
+int powerUp_x=200;
+int powerUp_y=200;
+
+//initialise random number gen
+random_device rd;
+mt19937 gen(rd());
 
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
@@ -40,9 +47,11 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
-	m_powerUp(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 16, 400.f, sf::Color::Green)
+	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
 	
 {
+	powerUp_create = 100;
+	powerUp_exist = false;
 	m_p1Score = 0;
 	m_p2Score = 0;
 	ai = false;
@@ -79,6 +88,12 @@ void GameEngine::draw()
 		m_paddle2.draw(m_window);
 		m_ball.draw(m_window);
 		m_ball2.draw(m_window);
+		if (powerUp_create < 16)
+		{
+			powerUp_exist = true;
+			m_powerUp.draw(m_window);
+		}
+
 	}
 	m_window.draw(m_hud);
 	m_window.display();
@@ -86,8 +101,6 @@ void GameEngine::draw()
 void GameEngine::rand128()
 {
 	//random AI
-	random_device rd;
-	mt19937 gen(rd());
 	uniform_int_distribution<> dis(0, 127);
 	int random_number = dis(gen);
 
@@ -117,7 +130,7 @@ void GameEngine::update()
 				outputFile << "D M U 000000\n";
 			}
 			outputFile.close();
-			cout << "default top5 file has benn created";
+			//cout << "default top5 file has benn created";
 		}
 
 	}
@@ -195,17 +208,17 @@ void GameEngine::run()
 	while (m_window.isOpen())
 	{
 		dt = m_clock.restart().asSeconds();
-		cout << ballSize << endl;
+		////cout << ballSize << endl;
 		if (m_gStates == 0)
 		{
-			//cout << "ballR " << ballR << endl;
+			////cout << "ballR " << ballR << endl;
 
 /*			countD--;
-			cout << countD << endl*/;
+			//cout << countD << endl*/;
 			
 			if (r < 255) 
 			{
-				r+=0.05;
+				r+=0.1;
 				sf::Color c(r, g, b);
 				m_hud.setFillColor(c);
 			}
@@ -363,12 +376,12 @@ void GameEngine::run()
 		{
 			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				m_gStates = GameStates::mainMenu;*/
-				//cout << m_diff;
+				////cout << m_diff;
 			// ADD YOUR CODE HERE !!!
 
 			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
-				cout << "UP key pressed" << endl;
+				//cout << "UP key pressed" << endl;
 				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 			}*/
 
@@ -432,8 +445,7 @@ void GameEngine::run()
 				//sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
 				if (ai)
 				{
-					random_device rd;
-					mt19937 gen(rd());
+
 					//int rnd_max = 127 + mousePositionDesktop.y;
 					/*int rnd_max = 800;*/
 
@@ -454,7 +466,7 @@ void GameEngine::run()
 							m_viewDist = 200;
 						}
 					}
-					cout << m_viewDist << endl;
+					////cout << m_viewDist << endl;
 				}
 
 				m_ball.setPosition(800 / 2.f, 600 / 2.f);
@@ -501,7 +513,7 @@ void GameEngine::run()
 			//int rnd_max = 127 + mousePositionDesktop.y;
 			//uniform_int_distribution<> dis(0, rnd_max);
 			//int random_number = dis(gen);
-			//cout << random_number << endl;
+			////cout << random_number << endl;
 			////if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
 			//if (random_number > rnd_max-rnd_max*0.2)
 			//{
@@ -553,12 +565,12 @@ void GameEngine::run()
 			//{
 				//sf::Color cBall(ballR, ballG, ballB);
 				//m_ball.setFillColor(cBall);
-				//cout << "ballR " << ballR<<endl;
+				////cout << "ballR " << ballR<<endl;
 				//sf::Color c(r, g, b);
 				if (countD > 0)
 				{
 					countD--;
-					cout << countD << endl;
+					////cout << countD << endl;
 					
 				}
 				if (countD < 1000)
@@ -589,10 +601,11 @@ void GameEngine::run()
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
+
+
 				if (ai)
 				{
-					random_device rd;
-					mt19937 gen(rd());
+					
 					//int rnd_max = 127 + mousePositionDesktop.y;
 					/*int rnd_max = 800;*/
 
@@ -600,45 +613,75 @@ void GameEngine::run()
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
 					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
-					cout << m_viewDist << endl;
+					////cout << m_viewDist << endl;
 				}
 
 				if (m_diff > 1) spd += 0.01;
 				m_ball.updateVelocity(-spd);
+				if (powerUp_exist==false)
+				{
+					uniform_int_distribution<> dis(0, 128);
+					powerUp_create = dis(gen);
 
+					if (powerUp_create < 16)
+					{
+						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						powerUp_x = powerX_dis(gen);
+						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						powerUp_y = powerY_dis(gen);
+					}
+
+					cout << powerUp_create<<endl;
+					cout << powerUp_exist << endl;
+				}
 				
 			}
 
 
 			if (m_paddle2.getBounds().contains(m_ball.getPosition()))
 			{
+
 				if (ai)
 				{
-					random_device rd;
-					mt19937 gen(rd());
+					
 					//int rnd_max = 127 + mousePositionDesktop.y;
 					/*int rnd_max = 800;*/
 
 					uniform_int_distribution<> dis(300, rnd_max);
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
+
 					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
-					cout << m_viewDist << endl;
+					////cout << m_viewDist << endl;
 				}
 				
 				
 				if (m_diff > 1) spd += 0.01;
 				m_ball.updateVelocity(spd);
+				if (powerUp_exist == false)
+				{
+					uniform_int_distribution<> dis(0, 128);
+					powerUp_create = dis(gen);
+					if (powerUp_create < 16)
+					{
+						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						powerUp_x = powerX_dis(gen);
+						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						powerUp_y = powerY_dis(gen);
+					}
+					cout << powerUp_create << endl;
+					cout << powerUp_exist << endl;
+				}
 			}
 
 
 			///////bounce ball2
 			if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
 			{
+
 				if (ai)
 				{
-					random_device rd;
-					mt19937 gen(rd());
+					
 					//int rnd_max = 127 + mousePositionDesktop.y;
 					/*int rnd_max = 800;*/
 
@@ -646,22 +689,39 @@ void GameEngine::run()
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
 					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
-					cout << m_viewDist << endl;
+					//cout << m_viewDist << endl;
 				}
 
 				if (m_diff > 1) spd += 0.01;
 				m_ball2.updateVelocity(-spd);
-
+				if (powerUp_exist == false)
+				{
+					uniform_int_distribution<> dis(0, 128);
+					powerUp_create = dis(gen);
+					if (powerUp_create < 16)
+					{
+						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						powerUp_x = powerX_dis(gen);
+						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						powerUp_y = powerY_dis(gen);
+					}
+					cout << powerUp_create << endl;
+					cout << powerUp_exist << endl;
+				}
 
 			}
 
 
+			if (m_powerUp.getBounds().contains(m_ball2.getPosition()))
+			{
+			}
 			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
 			{
+
+
 				if (ai)
 				{
-					random_device rd;
-					mt19937 gen(rd());
+					
 					//int rnd_max = 127 + mousePositionDesktop.y;
 					/*int rnd_max = 800;*/
 
@@ -669,12 +729,26 @@ void GameEngine::run()
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
 					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
-					cout << m_viewDist << endl;
+					//cout << m_viewDist << endl;
 				}
 
 
 				if (m_diff > 1) spd += 0.01;
 				m_ball2.updateVelocity(spd);
+				if (powerUp_exist == false)
+				{
+					uniform_int_distribution<> dis(0, 128);
+					powerUp_create = dis(gen);
+					if (powerUp_create < 16)
+					{
+						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						powerUp_x = powerX_dis(gen);
+						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						powerUp_y = powerY_dis(gen);
+					}
+					cout << powerUp_create << endl;
+					cout << powerUp_exist << endl;
+				}
 			}
 
 			if (m_p1Score>19 || m_p2Score > 19)
@@ -685,7 +759,7 @@ void GameEngine::run()
 		}
 
 		//////powerups
-		//errorif (m_powerup.getBounds().contains(m_ball.getPosition()))
+		//if (m_powerup.getBounds().contains(m_ball.getPosition()))
 		/*{
 			//bigball
 			ballSize=20;
