@@ -60,7 +60,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_defend = 0;
 	rnd_max = 800;
 	ball2=true;
-	introSnd_done = false;
+	introSound_done = false;
 	char playerName[6] = "D.M.U";
 	//sf::Color orange(255, 160, 0);
 	sf::Color c(0, 0, 0);
@@ -74,8 +74,12 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_goverBuffer.loadFromFile(".\\assets\\audio\\pong_gover.wav");	
 	m_introSound.setBuffer(m_introBuffer);
 	m_introBuffer.loadFromFile(".\\assets\\audio\\pong_intro.wav");	
-	m_SoundtrackSnd.setBuffer(m_SoundtrackBuffer);
-	m_SoundtrackBuffer.loadFromFile(".\\assets\\audio\\pong_rockloop0.wav");
+	m_drumsSound.setBuffer(m_drumsBuffer);
+	m_drumsBuffer.loadFromFile(".\\assets\\audio\\pong_drumsloop0.ogg");
+	m_SoundtrackSound.setLoop(true);	
+	m_SoundtrackSound.setBuffer(m_SoundtrackBuffer);
+	m_SoundtrackBuffer.loadFromFile(".\\assets\\audio\\pong_rockloop0.ogg");
+	m_SoundtrackSound.setLoop(true);
 
 
 	m_gStates = GameStates::intro;
@@ -200,6 +204,13 @@ void GameEngine::update()
 		else {
 			ss << "Player 2 wins";
 		}
+		
+
+		//reset all vars to default values
+		m_p1Score = 0;
+		m_p2Score = 0;
+		Sleep(2000);
+		m_gStates = GameEngine::mainMenu;
 		break;
 	default:
 		break;
@@ -224,6 +235,18 @@ void GameEngine::run()
 		////cout << ballSize << endl;
 		if (m_gStates == 0)
 		{
+			//play intro sound once
+			if (introSound_done == false)
+			{
+				m_introSound.play();
+				introSound_done = true;
+			}
+			//play music in the loop
+			//else if (introSound_done == true && (m_introSound.getStatus() != sf::Sound::Playing) && (m_drumsSound.getStatus() != sf::Sound::Playing))
+			//{
+			//	m_drumsSound.play();
+			//}
+
 			////cout << "ballR " << ballR << endl;
 
 /*			countD--;
@@ -257,11 +280,8 @@ void GameEngine::run()
 			//m_gStates = GameStates::intro
 			if (m_gStates == 0)
 			{
-				if (introSnd_done == false)
-				{ 
-					m_introSound.play();
-					introSnd_done = true;
-				}
+			
+
 				
 				/*sf::Color c(r, g, b);
 				m_hud.setFillColor(c);*/
@@ -276,6 +296,13 @@ void GameEngine::run()
 			//m_gStates = GameStates::mainMenu
 			if (m_gStates == 1)
 			{
+				//play music in the loop
+				if (m_drumsSound.getStatus() != sf::Sound::Playing) m_drumsSound.play();
+	/*			if (introSound_done == true && (m_introSound.getStatus() != sf::Sound::Playing) && (m_drumsSound.getStatus() != sf::Sound::Playing))
+				{
+					m_drumsSound.play();
+				}*/				
+
 				//if (event.type == sf::Event::Closed) m_window.close();
 				//if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				//	m_window.close();
@@ -392,6 +419,15 @@ void GameEngine::run()
 		//m_gStates = GameStates::playing
 		if (m_gStates == 4)
 		{
+			// Check if the intro music is still playing, and stop it 
+			if (m_drumsSound.getStatus() == sf::Sound::Playing) {
+				m_drumsSound.stop();
+			}
+			//play music in the loop
+			if (m_SoundtrackSound.getStatus() != sf::Sound::Playing) {
+				m_SoundtrackSound.play();
+			}
+			
 			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				m_gStates = GameStates::mainMenu;*/
 				////cout << m_diff;
@@ -406,23 +442,32 @@ void GameEngine::run()
 			//menu , pause in future	
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
+				//reset all vars to default values
+				m_p1Score = 0;
+				m_p2Score = 0;
+
 				m_gStates = GameStates::mainMenu;
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			if ((m_paddle1.getPosition().y > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) || (m_paddle1.getPosition().y <0))
 			{
 				m_paddle1.moveUp(dt);
+				cout << m_paddle1.getPosition().y<<endl;
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			else if ((m_paddle1.getPosition().y < 600 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))||(m_paddle1.getPosition().y > 600))
 			{
 				m_paddle1.moveDown(dt);
+				cout << m_paddle1.getPosition().y<<endl;
 			}
+
+
+
 
 			// increse player score
 			if ((m_ball.getPosition().x < 0))
 			{
 				m_goalSound.play();
-				Sleep(1000);
+				Sleep(400);
 				countD = 2000;
 				m_p2Score++;
 
@@ -432,7 +477,7 @@ void GameEngine::run()
 			else if ((m_ball.getPosition().x > 800))
 			{
 				m_goalSound.play();
-				Sleep(1000);
+				Sleep(400);
 				countD = 2000;
 				m_p1Score++;
 
