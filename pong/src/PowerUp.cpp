@@ -18,34 +18,34 @@ void PowerUp::draw(sf::RenderWindow& window)
 	window.draw(m_shape);
 }
 
-void PowerUp::move(float dt, float windowYVal)
-{
-	//default
-	////move up
-	//if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
-	//	m_shape.move(0, -m_speed * dt);
-	////// move down
-	//if (m_shape.getPosition().y + m_shape.getSize().y / 2 < window.getSize().y)
-	//	m_shape.move(0, m_speed * dt);
+//void PowerUp::move(float dt, float windowYVal)
+//{
+//	//default
+//	////move up
+//	//if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
+//	//	m_shape.move(0, -m_speed * dt);
+//	////// move down
+//	//if (m_shape.getPosition().y + m_shape.getSize().y / 2 < window.getSize().y)
+//	//	m_shape.move(0, m_speed * dt);
+//
+//	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+//	//{
+//	//	int y=m_shape.getPosition().y;
+//	//	y--;
+//	//}
+//}
 
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	//{
-	//	int y=m_shape.getPosition().y;
-	//	y--;
-	//}
-}
-
-void PowerUp::moveUp(float dt)
-{
-	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
-		m_shape.move(0, -m_speed * dt);
-}
-
-void PowerUp::moveDown(float dt)
-{//window.getSize().y
-	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 600)
-		m_shape.move(0, m_speed * dt);
-}
+//void PowerUp::moveUp(float dt)
+//{
+//	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
+//		m_shape.move(0, -m_speed * dt);
+//}
+//
+//void PowerUp::moveDown(float dt)
+//{//window.getSize().y
+//	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 600)
+//		m_shape.move(0, m_speed * dt);
+//}
 
 sf::FloatRect PowerUp::getBounds() const
 {
@@ -72,6 +72,10 @@ sf::Vector2f PowerUp::getPosition()
 	return m_shape.getPosition();
 }
 
+void PowerUp::setPosition(float x, float y)
+{
+	m_shape.setPosition(x, y);
+}
 
 //#include "PowerUp.h"
 //
