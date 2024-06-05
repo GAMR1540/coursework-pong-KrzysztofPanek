@@ -59,7 +59,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
-	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 64, 64, sf::Color::Green)
+	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
 	
 {
 	powerUp_create = 100;
@@ -424,7 +424,7 @@ void GameEngine::run()
 				{
 					m_diff = 4;
 					m_viewDist = 600;
-					int rnd_max = 800;
+					int rnd_max = m_window.getSize().x;
 					int rnd_min = 600;
 					spd = 0.5;
 					ballSize = 12;
@@ -613,7 +613,7 @@ void GameEngine::run()
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 			}
-			else if ((m_ball.getPosition().x > 800))
+			else if ((m_ball.getPosition().x > m_window.getSize().x))
 			{
 				m_hud.setCharacterSize(80);
 				scored = true;
@@ -648,7 +648,7 @@ void GameEngine::run()
 			//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 			//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 			//	}
-			//	else if ((m_ball2.getPosition().x > 800))
+			//	else if ((m_ball2.getPosition().x > m_window.getSize().x))
 			//	{
 			//		m_p1Score++;
 
@@ -658,7 +658,7 @@ void GameEngine::run()
 			//}
 
 			//Restet ball position
-			if ((m_ball.getPosition().x < 0) || (m_ball.getPosition().x > 800))
+			if ((m_ball.getPosition().x < 0) || (m_ball.getPosition().x > m_window.getSize().x))
 			{
 				//random AI
 						// Get the mouse position relative to the desktop
@@ -667,19 +667,19 @@ void GameEngine::run()
 				{
 
 					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = 800;*/
+					/*int rnd_max = m_window.getSize().x;*/
 
 					uniform_int_distribution<> dis(300, rnd_max);
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
-					if (m_diff == 4) if (m_viewDist > 720) m_viewDist = 800;
-					if (m_diff == 3) if (m_viewDist < 520 || (m_viewDist < 710 && m_viewDist>680)) m_viewDist = 800;
-					if (m_diff == 2) if (m_viewDist < 50) m_viewDist = 800;
+					if (m_diff == 4) if (m_viewDist > 720) m_viewDist = m_window.getSize().x;
+					if (m_diff == 3) if (m_viewDist < 520 || (m_viewDist < 710 && m_viewDist>680)) m_viewDist = m_window.getSize().x;
+					if (m_diff == 2) if (m_viewDist < 50) m_viewDist = m_window.getSize().x;
 					if (m_diff == 1)
 					{
 						if (m_viewDist < 32)
 						{
-							m_viewDist = 800;
+							m_viewDist = m_window.getSize().x;
 						}
 						else if (m_viewDist > 400)
 						{
@@ -695,17 +695,17 @@ void GameEngine::run()
 				if (ball2)
 				{
 					//Set position of 1st Ball
-					//on 1/3h m_ball.setPosition(800 / 2.f, 600 * 0.3);
-					m_ball.setPosition(800 / 2.f, 600 / 2.f);
+					//on 1/3h m_ball.setPosition(m_window.getSize().x / 2.f, 600 * 0.3);
+					m_ball.setPosition(m_window.getSize().x / 2.f, 600 / 2.f);
 					//Set position of 2nd Ball
-					//on 2/3h m_ball2.setPosition(800 / 2.f, 600 * 0.6);
-					m_ball2.setPosition(800 / 2.f, 600 / 2.f);
+					//on 2/3h m_ball2.setPosition(m_window.getSize().x / 2.f, 600 * 0.6);
+					m_ball2.setPosition(m_window.getSize().x / 2.f, 600 / 2.f);
 					scored_timeout = 1200;
 				}
 				else
 				{
 					//Set position of 1st Ball
-					m_ball.setPosition(800 / 2.f, 600 / 2.f);
+					m_ball.setPosition(m_window.getSize().x / 2.f, 600 / 2.f);
 					scored_timeout = 1200;
 				}
 
@@ -842,12 +842,12 @@ void GameEngine::run()
 				{
 					
 					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = 800;*/
+					/*int rnd_max = m_window.getSize().x;*/
 
 					uniform_int_distribution<> dis(300, rnd_max);
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
 					////cout << m_viewDist << endl;
 				}
 
@@ -860,9 +860,9 @@ void GameEngine::run()
 
 					if (powerUp_create < 32)
 					{
-						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
 						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
 						powerUp_y = powerY_dis(gen);
 						powerUp_hide = 10000;
 					}
@@ -882,13 +882,13 @@ void GameEngine::run()
 				{
 					
 					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = 800;*/
+					/*int rnd_max = m_window.getSize().x;*/
 
 					uniform_int_distribution<> dis(300, rnd_max);
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
 
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
 					////cout << m_viewDist << endl;
 				}
 				
@@ -901,9 +901,9 @@ void GameEngine::run()
 					powerUp_create = dis(gen);
 					if (powerUp_create < 32)
 					{
-						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
 						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
 						powerUp_y = powerY_dis(gen);
 						powerUp_hide = 10000;
 					}
@@ -923,12 +923,12 @@ void GameEngine::run()
 					{
 
 						//int rnd_max = 127 + mousePositionDesktop.y;
-						/*int rnd_max = 800;*/
+						/*int rnd_max = m_window.getSize().x;*/
 
 						uniform_int_distribution<> dis(300, rnd_max);
 						//int m_viewDist = dis(gen);
 						m_viewDist = dis(gen);
-						if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+						if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
 						//cout << m_viewDist << endl;
 					}
 
@@ -941,9 +941,9 @@ void GameEngine::run()
 						if (powerUp_create < 32)
 						{
 							
-							uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+							uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
 							powerUp_x = powerX_dis(gen);
-							uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+							uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
 							powerUp_y = powerY_dis(gen);
 						}
 						cout << powerUp_create << endl;
@@ -1015,12 +1015,12 @@ void GameEngine::run()
 			//	{
 			//		
 			//		//int rnd_max = 127 + mousePositionDesktop.y;
-			//		/*int rnd_max = 800;*/
+			//		/*int rnd_max = m_window.getSize().x;*/
 
 			//		uniform_int_distribution<> dis(300, rnd_max);
 			//		//int m_viewDist = dis(gen);
 			//		m_viewDist = dis(gen);
-			//		if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+			//		if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
 			//		//cout << m_viewDist << endl;
 			//	}
 
@@ -1053,12 +1053,12 @@ void GameEngine::run()
 				{
 					
 					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = 800;*/
+					/*int rnd_max = m_window.getSize().x;*/
 
 					uniform_int_distribution<> dis(300, rnd_max);
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = 800;
+					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
 					//cout << m_viewDist << endl;
 				}
 
@@ -1071,9 +1071,9 @@ void GameEngine::run()
 					powerUp_create = dis(gen);
 					if (powerUp_create < 32)
 					{
-						uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
+						uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
 						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
+						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
 						powerUp_y = powerY_dis(gen);
 					}
 					cout << powerUp_create << endl;
