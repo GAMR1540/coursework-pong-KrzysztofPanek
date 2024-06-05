@@ -1143,10 +1143,10 @@ void GameEngine::run()
 			{
 				paused = false;
 				//// draw shapes to screen
-				//draw();
+				draw();
 				//// update hud
-				//update();
-				
+				update();
+				dt = m_clock.restart().asSeconds();
 				Sleep(2000);
 				dt = m_clock.restart().asSeconds();
 				//m_ball.updateVelocity(spd);
