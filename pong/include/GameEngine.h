@@ -52,7 +52,7 @@ private:
 	char playerName[6] = "D.M.U";
 	//float ballSize;
 	static const int m_maxScore = 3;
-	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick};
+	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick, PvP_playing};
 	GameStates m_gStates;
 
 
