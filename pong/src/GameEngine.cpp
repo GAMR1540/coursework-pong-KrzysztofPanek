@@ -36,8 +36,12 @@ int powerUp_y=200;
 random_device rd;
 mt19937 gen(rd());
 
+//score innitial values
 bool scored = false;
 int scored_timeout = 1200;
+
+//hide powerup
+int powerUp_hide = 0;
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
@@ -137,14 +141,16 @@ void GameEngine::draw()
 
 		if (powerUp_create < 16)
 		{
+			if (powerUp_set)
+			{
+			powerUp_hide = 10000;
 			powerUp_exist = true;
 			//draw halfway line
 			sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
 			halfWayLine.setFillColor(sf::Color(100, 100, 100));
 			halfWayLine.setPosition(400, 0);
 			m_window.draw(halfWayLine);
-			if (powerUp_set)
-			{
+			
 				uniform_int_distribution<> disPX(100, 700);
 				int powerUp_x = disPX(gen);
 				uniform_int_distribution<> disPY(100, 500);
@@ -502,6 +508,19 @@ void GameEngine::run()
 				m_SoundtrackSound.play();
 			}
 			
+			//hide power up hwn time run out
+			if (powerUp_hide > 2)
+			{
+				powerUp_hide-=2;
+				cout << "powerUp_hide:" << powerUp_hide << endl;
+			}
+			else if (powerUp_hide > 0)
+			{
+				m_powerUp.setPosition(1000, 1000);
+
+			}
+
+
 			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				m_gStates = GameStates::mainMenu;*/
 				////cout << m_diff;
@@ -800,6 +819,7 @@ void GameEngine::run()
 						powerUp_x = powerX_dis(gen);
 						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
 						powerUp_y = powerY_dis(gen);
+						powerUp_hide = 10000;
 					}
 
 					cout << powerUp_create<<endl;
@@ -839,6 +859,7 @@ void GameEngine::run()
 						powerUp_x = powerX_dis(gen);
 						uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
 						powerUp_y = powerY_dis(gen);
+						powerUp_hide = 10000;
 					}
 					cout << powerUp_create << endl;
 					cout << powerUp_exist << endl;
