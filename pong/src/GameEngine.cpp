@@ -425,9 +425,10 @@ void GameEngine::run()
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
 					m_SoundtrackSound.stop();
 				}
-
+				
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				{
+					Sleep(200);
 					//paused = false;
 					m_gStates = GameStates::playing;
 				}
@@ -609,24 +610,6 @@ void GameEngine::run()
 				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 			}*/
 
-			//pause game
-			if (paused == true)
-			{
-				paused = false;
-				Sleep(200);
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			{
-				//pause game
-				paused = true;
-				//to qiut
-				//reset all vars to default values
-				/*m_p1Score = 0;
-				m_p2Score = 0;
-				scored_timeout = 1200;
-				m_hud.setCharacterSize(40);*/
-				m_gStates = GameStates::pauseMenu;
-			}
 
 
 			//set default char size when score
@@ -1152,6 +1135,36 @@ void GameEngine::run()
 				m_hud.setCharacterSize(80);
 				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
 				m_gStates= GameEngine::gameOver;
+			}
+
+
+			//pause game
+			if (paused == true)
+			{
+				paused = false;
+				//// draw shapes to screen
+				//draw();
+				//// update hud
+				//update();
+				
+				Sleep(2000);
+				dt = m_clock.restart().asSeconds();
+				//m_ball.updateVelocity(spd);
+				//m_ball2.updateVelocity(spd);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			{
+				/*m_ball.updateVelocity(0);
+				m_ball2.updateVelocity(0);*/
+				//pause game
+				paused = true;
+				//to qiut
+				//reset all vars to default values
+				/*m_p1Score = 0;
+				m_p2Score = 0;
+				scored_timeout = 1200;
+				m_hud.setCharacterSize(40);*/
+				m_gStates = GameStates::pauseMenu;
 			}
 		
 		}
