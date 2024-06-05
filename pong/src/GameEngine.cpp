@@ -43,6 +43,8 @@ int scored_timeout = 1200;
 //hide powerup
 int powerUp_hide = 0;
 
+bool game_start = 0;
+
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
 	//m_halfWayLife(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
@@ -143,13 +145,13 @@ void GameEngine::draw()
 		{
 			if (powerUp_set)
 			{
-			powerUp_hide = 10000;
-			powerUp_exist = true;
-			//draw halfway line
-			sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
-			halfWayLine.setFillColor(sf::Color(100, 100, 100));
-			halfWayLine.setPosition(400, 0);
-			m_window.draw(halfWayLine);
+				powerUp_hide = 10000;
+				powerUp_exist = true;
+				//draw halfway line
+				sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
+				halfWayLine.setFillColor(sf::Color(100, 100, 100));
+				halfWayLine.setPosition(400, 0);
+				m_window.draw(halfWayLine);
 			
 				uniform_int_distribution<> disPX(100, 700);
 				int powerUp_x = disPX(gen);
@@ -298,7 +300,7 @@ void GameEngine::run()
 {
 	float dt;
 	float spd = 1;
-	int countD = 3000;
+	int countD = 1000;
 	float r = 0;
 	float g = 0;
 	float b = 0;
@@ -497,29 +499,33 @@ void GameEngine::run()
 		//m_gStates = GameStates::playing
 		if (m_gStates == 4)
 		{
-			m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
+			if (game_start == false)
+			{
+				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
 
-			// Check if the intro music is still playing, and stop it 
-			if (m_drumsSound.getStatus() == sf::Sound::Playing) {
-				m_drumsSound.stop();
+				// Check if the intro music is still playing, and stop it 
+				if (m_drumsSound.getStatus() == sf::Sound::Playing) {
+					m_drumsSound.stop();
+				}
+				game_start = true;
 			}
-			//play music in the loop
-			if (m_SoundtrackSound.getStatus() != sf::Sound::Playing) {
-				m_SoundtrackSound.play();
-			}
+				//play music in the loop
+				if (m_SoundtrackSound.getStatus() != sf::Sound::Playing) {
+					m_SoundtrackSound.play();
+				}
+
+				//hide power up hwn time run out
+				if (powerUp_hide > 2)
+				{
+					powerUp_hide -= 2;
+					cout << "powerUp_hide:" << powerUp_hide << endl;
+				}
+				else if (powerUp_hide > 0)
+				{
+					m_powerUp.setPosition(1000, 1000);
+
+				}
 			
-			//hide power up hwn time run out
-			if (powerUp_hide > 2)
-			{
-				powerUp_hide-=2;
-				cout << "powerUp_hide:" << powerUp_hide << endl;
-			}
-			else if (powerUp_hide > 0)
-			{
-				m_powerUp.setPosition(1000, 1000);
-
-			}
-
 
 			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				m_gStates = GameStates::mainMenu;*/
@@ -554,7 +560,8 @@ void GameEngine::run()
 				}
 			}
 
-			cout << scored_timeout << endl;
+			//cout << scored_timeout << endl;
+			cout << countD << endl;
 
 
 			// increse player score
@@ -564,7 +571,7 @@ void GameEngine::run()
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
-				countD = 2000;
+				countD = 1000;
 				m_p2Score++;
 
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
@@ -576,7 +583,7 @@ void GameEngine::run()
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
-				countD = 2000;
+				countD = 1000;
 				m_p1Score++;
 
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
@@ -770,7 +777,7 @@ void GameEngine::run()
 					// move first ball
 					m_ball.move(-dt, m_window);
 					
-					//countD = 2000;
+					//countD = 10000;
 					if (ball2 && countD < 2)
 					{
 
