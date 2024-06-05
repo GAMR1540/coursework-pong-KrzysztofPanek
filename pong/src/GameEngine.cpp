@@ -425,10 +425,10 @@ void GameEngine::run()
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
 					m_SoundtrackSound.stop();
 				}
-				
+				//Sleep(1000);
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				{
-					Sleep(200);
+					Sleep(1000);
 					//paused = false;
 					m_gStates = GameStates::playing;
 				}
@@ -636,7 +636,7 @@ void GameEngine::run()
 				Sleep(400);
 				countD = 2000;
 				m_p2Score++;
-
+				dt = m_clock.restart().asSeconds();
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 			}
@@ -648,6 +648,7 @@ void GameEngine::run()
 				Sleep(400);
 				countD = 2000;
 				m_p1Score++;
+				dt = m_clock.restart().asSeconds();
 
 				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
@@ -1145,7 +1146,7 @@ void GameEngine::run()
 				//// draw shapes to screen
 				draw();
 				//// update hud
-				update();
+				//update();
 				dt = m_clock.restart().asSeconds();
 				Sleep(2000);
 				dt = m_clock.restart().asSeconds();
@@ -1158,12 +1159,14 @@ void GameEngine::run()
 				m_ball2.updateVelocity(0);*/
 				//pause game
 				paused = true;
+
 				//to qiut
 				//reset all vars to default values
 				/*m_p1Score = 0;
 				m_p2Score = 0;
 				scored_timeout = 1200;
 				m_hud.setCharacterSize(40);*/
+
 				m_gStates = GameStates::pauseMenu;
 			}
 		
