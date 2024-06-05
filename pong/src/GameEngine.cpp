@@ -428,7 +428,7 @@ void GameEngine::run()
 
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				{
-					paused = false;
+					//paused = false;
 					m_gStates = GameStates::playing;
 				}
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
@@ -609,8 +609,12 @@ void GameEngine::run()
 				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 			}*/
 
-			//menu , pause in future
-			if (paused == true) paused = false;
+			//pause game
+			if (paused == true)
+			{
+				paused = false;
+				Sleep(200);
+			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
 				//pause game
