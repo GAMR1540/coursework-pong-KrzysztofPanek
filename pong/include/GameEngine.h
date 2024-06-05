@@ -33,7 +33,6 @@ private:
 	Ball m_ball2;
 	PowerUp m_powerUp;
 
-	//int ballSize = 800;
 
 	int powerUp_create;
 	bool powerUp_exist;
@@ -51,7 +50,7 @@ private:
 	int m_defend;
 	bool ball2;
 	char playerName[6] = "D.M.U";
-	float ballSize=8;
+	//float ballSize;
 	static const int m_maxScore = 3;
 	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick};
 	GameStates m_gStates;

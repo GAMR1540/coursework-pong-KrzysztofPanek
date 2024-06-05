@@ -37,13 +37,13 @@ void Paddle::move(float dt, float windowYVal)
 
 void Paddle::moveUp(float dt)
 {
-	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 0)
+	if (m_shape.getPosition().y - m_shape.getSize().y / 2 > 5)
 		m_shape.move(0, -m_speed * dt);
 }
 
 void Paddle::moveDown(float dt)
 {//window.getSize().y
-	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 600)
+	if (m_shape.getPosition().y + m_shape.getSize().y / 2 < 595)
 		m_shape.move(0, m_speed * dt);
 }
 
