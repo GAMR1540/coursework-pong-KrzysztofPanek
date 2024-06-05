@@ -48,6 +48,10 @@ bool game_start = 0;
 //game couver counter
 int gOverCounter = 2000;
 
+//for pause game
+///true if game has been stared
+bool paused = false;
+
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
 	//m_halfWayLife(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
@@ -60,7 +64,6 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
-	
 {
 	powerUp_create = 100;
 	powerUp_exist = false;
@@ -253,10 +256,18 @@ void GameEngine::update()
 	case GameEngine::mainMenu:
 		//ss << "Press the Space\nkey to start";
 		ss << "    P.O.N.G.\n\n\nQ - 1 Player\nA - 2 Player\n\nZ - top5\n\nEsc - Quit";
+		break;	
+	case GameEngine::pauseMenu:
+		//ss << "Press the Space\nkey to start";
+		ss << "    P.O.N.G.\n\n\nEsc - resume game\nA - Abandon game\n";
 		break;
 	case GameEngine::vsAi:
 		//ss << "Press the Space\nkey to start";
 		ss << "    P.O.N.G.\n\n\nChoose\nis your opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
+		break;	
+	case GameEngine::mPlayer:
+		//ss << "Press the Space\nkey to start";
+		ss << "    P.O.N.G.\n\n\Player1\tPlayer2\n\n\t\tColor\nBlue\t\t\tRed\n\n\tControls\nW,S,A,D\t\tArrows\n\n\n\n\nPress SPACE\nto start\n";
 		break;
 	case GameEngine::top5:
 
@@ -405,6 +416,27 @@ void GameEngine::run()
 					m_window.close();
 				}
 
+			}			
+/////pauseMenu			
+			if (m_gStates == 10)
+			{
+				m_hud.setCharacterSize(40);
+				// Check if the intro music is still playing, and stop it 
+				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
+					m_SoundtrackSound.stop();
+				}
+
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				{
+					//paused = false;
+					m_gStates = GameStates::playing;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+				{
+					paused = false;
+					m_gStates = GameStates::mainMenu;
+				}
+
 			}
 
 			//m_gStates = GameStates::vsAi
@@ -474,7 +506,11 @@ void GameEngine::run()
 				ai = false;
 				
 				//m_diff = 0;
-				m_gStates = GameStates::playing;
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+				{
+					m_gStates = GameStates::playing;
+				}
+				
 
 			}
 
@@ -573,15 +609,23 @@ void GameEngine::run()
 				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 			}*/
 
-			//menu , pause in future	
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			//pause game
+			if (paused == true)
 			{
+				paused = false;
+				Sleep(200);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			{
+				//pause game
+				paused = true;
+				//to qiut
 				//reset all vars to default values
-				m_p1Score = 0;
+				/*m_p1Score = 0;
 				m_p2Score = 0;
 				scored_timeout = 1200;
-				m_hud.setCharacterSize(40);
-				m_gStates = GameStates::mainMenu;
+				m_hud.setCharacterSize(40);*/
+				m_gStates = GameStates::pauseMenu;
 			}
 
 
@@ -627,17 +671,34 @@ void GameEngine::run()
 			}
 			//Paddle1 - Human Player move paddle
 			//This setup prevent to go paddle outside screen when score
-			else if (m_paddle1.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
+			//else
+
+//////PLAYER1 MOVE
+			if (m_paddle1.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 			{
 				m_paddle1.moveUp(dt);
 				cout << m_paddle1.getPosition().y << endl;
+				cout << ai << endl;
 			}
-			else if (m_paddle1.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
+			else if (m_paddle1.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 			{
 				m_paddle1.moveDown(dt);
 				cout << m_paddle1.getPosition().y << endl;
 			}
-
+////////PLAYER2 MOVE
+			if (ai == false)
+			{
+				if (m_paddle2.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				{
+					m_paddle2.moveUp(dt);
+					cout << m_paddle2.getPosition().y << endl;
+				}
+				else if (m_paddle2.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+				{
+					m_paddle2.moveDown(dt);
+					cout << m_paddle2.getPosition().y << endl;
+				}
+			}
 			//Score for 2nd ball
 			//if (ball2)
 			//{
@@ -715,28 +776,30 @@ void GameEngine::run()
 			}
 
 			//AI
-			if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y < m_paddle2.getPosition().y))
+			if (ai)
 			{
-				m_paddle2.moveUp(dt / m_diff);
-			}
-			else if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y > m_paddle2.getPosition().y))
-			{
-				m_paddle2.moveDown(dt / m_diff);
-			}
-			//AI for 2nd BALL
-			if (ball2)
-			{
-				if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y < m_paddle2.getPosition().y))
+				if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y < m_paddle2.getPosition().y))
 				{
 					m_paddle2.moveUp(dt / m_diff);
 				}
-				else if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y > m_paddle2.getPosition().y))
+				else if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y > m_paddle2.getPosition().y))
 				{
 					m_paddle2.moveDown(dt / m_diff);
 				}
+				//AI for 2nd BALL
+				if (ball2)
+				{
+					if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y < m_paddle2.getPosition().y))
+					{
+						m_paddle2.moveUp(dt / m_diff);
+					}
+					else if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y > m_paddle2.getPosition().y))
+					{
+						m_paddle2.moveDown(dt / m_diff);
+					}
+				}
+
 			}
-
-
 
 
 			//random AI
@@ -1092,25 +1155,6 @@ void GameEngine::run()
 			}
 		
 		}
-
-		//////powerups
-		//if (m_powerup.getBounds().contains(m_ball.getPosition()))
-		/*{
-			//bigball
-			ballSize=20;
-			//smallball
-			ballSize=5;
-
-			//slowball
-			spd/=2;
-			m_ball.updateVelocity(spd);
-		}
-		*/
-		//if (m_paddle2.getBounds().height)
-		//{
-		//	m_ball.move(-dt, m_window);
-		//	
-		//}
 
 		//float p1y=m_paddle1.getPosition().y
 
