@@ -48,6 +48,10 @@ bool game_start = 0;
 //game couver counter
 int gOverCounter = 2000;
 
+//for pause game
+///true if game has been stared
+bool paused = false;
+
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
 	//m_halfWayLife(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
@@ -60,7 +64,6 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
-	
 {
 	powerUp_create = 100;
 	powerUp_exist = false;
@@ -253,6 +256,10 @@ void GameEngine::update()
 	case GameEngine::mainMenu:
 		//ss << "Press the Space\nkey to start";
 		ss << "    P.O.N.G.\n\n\nQ - 1 Player\nA - 2 Player\n\nZ - top5\n\nEsc - Quit";
+		break;	
+	case GameEngine::pauseMenu:
+		//ss << "Press the Space\nkey to start";
+		ss << "    P.O.N.G.\n\n\nEsc - resume game\nA - Abandon game\n";
 		break;
 	case GameEngine::vsAi:
 		//ss << "Press the Space\nkey to start";
@@ -407,6 +414,27 @@ void GameEngine::run()
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 				{
 					m_window.close();
+				}
+
+			}			
+/////pauseMenu			
+			if (m_gStates == 10)
+			{
+				m_hud.setCharacterSize(40);
+				// Check if the intro music is still playing, and stop it 
+				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
+					m_SoundtrackSound.stop();
+				}
+
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				{
+					paused = false;
+					m_gStates = GameStates::playing;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+				{
+					paused = false;
+					m_gStates = GameStates::mainMenu;
 				}
 
 			}
@@ -581,15 +609,19 @@ void GameEngine::run()
 				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
 			}*/
 
-			//menu , pause in future	
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			//menu , pause in future
+			if (paused == true) paused = false;
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
+				//pause game
+				paused = true;
+				//to qiut
 				//reset all vars to default values
-				m_p1Score = 0;
+				/*m_p1Score = 0;
 				m_p2Score = 0;
 				scored_timeout = 1200;
-				m_hud.setCharacterSize(40);
-				m_gStates = GameStates::mainMenu;
+				m_hud.setCharacterSize(40);*/
+				m_gStates = GameStates::pauseMenu;
 			}
 
 
@@ -635,17 +667,34 @@ void GameEngine::run()
 			}
 			//Paddle1 - Human Player move paddle
 			//This setup prevent to go paddle outside screen when score
-			else if (m_paddle1.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
+			//else
+
+//////PLAYER1 MOVE
+			if (m_paddle1.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 			{
 				m_paddle1.moveUp(dt);
 				cout << m_paddle1.getPosition().y << endl;
+				cout << ai << endl;
 			}
-			else if (m_paddle1.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
+			else if (m_paddle1.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 			{
 				m_paddle1.moveDown(dt);
 				cout << m_paddle1.getPosition().y << endl;
 			}
-
+////////PLAYER2 MOVE
+			if (ai == false)
+			{
+				if (m_paddle2.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				{
+					m_paddle2.moveUp(dt);
+					cout << m_paddle2.getPosition().y << endl;
+				}
+				else if (m_paddle2.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+				{
+					m_paddle2.moveDown(dt);
+					cout << m_paddle2.getPosition().y << endl;
+				}
+			}
 			//Score for 2nd ball
 			//if (ball2)
 			//{
@@ -723,571 +772,30 @@ void GameEngine::run()
 			}
 
 			//AI
-			if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y < m_paddle2.getPosition().y))
+			if (ai)
 			{
-				m_paddle2.moveUp(dt / m_diff);
-			}
-			else if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y > m_paddle2.getPosition().y))
-			{
-				m_paddle2.moveDown(dt / m_diff);
-			}
-			//AI for 2nd BALL
-			if (ball2)
-			{
-				if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y < m_paddle2.getPosition().y))
+				if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y < m_paddle2.getPosition().y))
 				{
 					m_paddle2.moveUp(dt / m_diff);
 				}
-				else if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y > m_paddle2.getPosition().y))
+				else if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y > m_paddle2.getPosition().y))
 				{
 					m_paddle2.moveDown(dt / m_diff);
 				}
-			}
-
-
-
-
-			//random AI
-			// Get the mouse position relative to the desktop
-			//sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
-			//random_device rd;
-			//mt19937 gen(rd());
-			//int rnd_max = 127 + mousePositionDesktop.y;
-			//uniform_int_distribution<> dis(0, rnd_max);
-			//int random_number = dis(gen);
-			////cout << random_number << endl;
-			////if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
-			//if (random_number > rnd_max-rnd_max*0.2)
-			//{
-			//	//move_up
-			//	m_paddle2.moveUp(dt/5);
-			//	//Sleep(100);
-			//}
-			////else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
-			//else if (random_number < rnd_max * 0.21)
-			//{
-			//	//move_down
-
-			//	m_paddle2.moveDown(dt/5);
-			//	//Sleep(100);
-			//}
-			/*
-			//if (random_number > rnd_max * 0.95)
-			if (random_number > 200)
-			{
-				//random AI -- easy mode
-
-					//if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
-				if (random_number > rnd_max - rnd_max * 0.5)
-				{
-					//move_up
-					m_paddle2.moveUp(dt / 5);
-					//Sleep(100);
-				}
-				//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
-				else if (random_number < rnd_max * 0.51)
-				{
-					//move_down
-
-					m_paddle2.moveDown(dt / 5);
-					//Sleep(100);
-				}
-			}
-			else
-			{
-				//impossible
-				//m_paddle2.getPosition.y() = m_ball.getPosition.y();
-				//m_paddle2.setPosition(m_paddle2.getPosition().x, m_ball.getPosition().y);
-
-
-			}*/
-
-			//move balls
-			//if (ballR==255 && ballG==255)
-			//{
-				//sf::Color cBall(ballR, ballG, ballB);
-				//m_ball.setFillColor(cBall);
-				////cout << "ballR " << ballR<<endl;
-				//sf::Color c(r, g, b);
-				if (countD > 0)
-				{
-					countD--;
-					////cout << countD << endl;
-					
-				}
-				if (countD < 1000)
-				{
-					//sf::Color cBall(255, 255, 0);
-					//m_ball.setFillColor(cBall);
-					 
-					// move first ball
-					m_ball.move(-dt, m_window);
-					
-					//countD = 2000;
-					if (ball2 && countD < 2)
-					{
-						m_ball2.setFillColor(sf::Color::Yellow);
-						m_ball2.move(-dt, m_window);
-
-					}
-				}
-			//}
-			//else
-			//{
-			//	ballR++;
-			//	ballG++;
-			//	sf::Color cBall(ballR, ballG, ballB);
-			//	m_ball.setFillColor(cBall);
-			//}
-			///bounce ball 1
-
-			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
-			{
-				
-				m_ballSound.play();
-
-				if (ai)
-				{
-					
-					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = m_window.getSize().x;*/
-
-					uniform_int_distribution<> dis(300, rnd_max);
-					//int m_viewDist = dis(gen);
-					m_viewDist = dis(gen);
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
-					////cout << m_viewDist << endl;
-				}
-
-				if (m_diff > 1) spd += 0.01;
-				m_ball.updateVelocity(-spd);
-				if (powerUp_exist==false)
-				{
-					uniform_int_distribution<> dis(0, 128);
-					powerUp_create = dis(gen);
-
-					if (powerUp_create < 32)
-					{
-						uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
-						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
-						powerUp_y = powerY_dis(gen);
-						powerUp_hide = 10000;
-					}
-
-					cout << powerUp_create<<endl;
-					cout << powerUp_exist << endl;
-
-				}
-				
-			}
-
-
-			if (m_paddle2.getBounds().contains(m_ball.getPosition()))
-			{
-				m_ballSound.play();
-				if (ai)
-				{
-					
-					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = m_window.getSize().x;*/
-
-					uniform_int_distribution<> dis(300, rnd_max);
-					//int m_viewDist = dis(gen);
-					m_viewDist = dis(gen);
-
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
-					////cout << m_viewDist << endl;
-				}
-				
-				
-				if (m_diff > 1) spd += 0.01;
-				m_ball.updateVelocity(spd);
-				if (powerUp_exist == false)
-				{
-					uniform_int_distribution<> dis(0, 128);
-					powerUp_create = dis(gen);
-					if (powerUp_create < 32)
-					{
-						uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
-						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
-						powerUp_y = powerY_dis(gen);
-						powerUp_hide = 10000;
-					}
-					cout << powerUp_create << endl;
-					cout << powerUp_exist << endl;
-
-				}
-			}
-
-			if (ball2)
-			{
-				///////bounce ball2
-				if (m_paddle1.getBounds().contains(m_ball2.getPosition()))
-				{
-					m_ballSound.play();
-					if (ai)
-					{
-
-						//int rnd_max = 127 + mousePositionDesktop.y;
-						/*int rnd_max = m_window.getSize().x;*/
-
-						uniform_int_distribution<> dis(300, rnd_max);
-						//int m_viewDist = dis(gen);
-						m_viewDist = dis(gen);
-						if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
-						//cout << m_viewDist << endl;
-					}
-
-					if (m_diff > 1) spd += 0.01;
-					m_ball2.updateVelocity(-spd);
-					if (powerUp_exist == false)
-					{
-						uniform_int_distribution<> dis(0, 128);
-						powerUp_create = dis(gen);
-						if (powerUp_create < 32)
-						{
-							
-							uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
-							powerUp_x = powerX_dis(gen);
-							uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
-							powerUp_y = powerY_dis(gen);
-						}
-						cout << powerUp_create << endl;
-						cout << powerUp_exist << endl;
-					}
-				}
-			
-			 
-				if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball2.getPosition())))
-				{
-					//choose random power up
-					uniform_int_distribution<> pwr(0, 5);
-					int pwr_choose = pwr(gen);
-
-					if (pwr_choose < 3)
-					{
-						//m_paddle1.setSize(m_size);
-						m_ball2.updateVelocity(-0.5);
-						m_ball.updateVelocity(0.5);
-					}
-					//else if (pwr_choose < 3)
-					//{
-					//	//m_paddle1.setSize(m_size);
-					//	m_ball2.updateVelocity(0.5);
-					//	m_ball.updateVelocity(2);
-					//}
-					else
-					{
-						m_ball2.updateVelocity(-0.5);
-						m_ball.updateVelocity(0.5);
-					}
-
-					powerUp_exist = false;
-				}
-			}
-			if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball.getPosition())))
-			{
-				//choose random power up
-				uniform_int_distribution<> pwr(0, 5);
-				int pwr_choose = pwr(gen);
-				ball2 = true;
-				if (pwr_choose < 3)
-				{
-					//m_paddle1.setSize(m_size);
-					m_ball2.updateVelocity(0.5);
-					m_ball.updateVelocity(-0.5);
-				}
-				//else if (pwr_choose < 3)
-				//{
-				//	//m_paddle1.setSize(m_size);
-				//	m_ball2.updateVelocity(0.5);
-				//	m_ball.updateVelocity(2);
-				//}
-				else
-				{
-					m_ball2.updateVelocity(0.5);
-					m_ball.updateVelocity(-0.5);
-				}
-
-				powerUp_exist = false;
-			}
-
-			/////////////////////////////////////////
-			//if (centerCircle.getBounds().contains(m_ball2.getPosition()))
-			//{
-			//	m_ballSound.play();
-
-			//	if (ai)
-			//	{
-			//		
-			//		//int rnd_max = 127 + mousePositionDesktop.y;
-			//		/*int rnd_max = m_window.getSize().x;*/
-
-			//		uniform_int_distribution<> dis(300, rnd_max);
-			//		//int m_viewDist = dis(gen);
-			//		m_viewDist = dis(gen);
-			//		if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
-			//		//cout << m_viewDist << endl;
-			//	}
-
-
-			//	if (m_diff > 1) spd += 0.01;
-			//	m_ball2.updateVelocity(spd);
-			//	if (powerUp_exist == false)
-			//	{
-			//		uniform_int_distribution<> dis(0, 128);
-			//		powerUp_create = dis(gen);
-			//		if (powerUp_create < 32)
-			//		{
-			//			uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
-			//			powerUp_x = powerX_dis(gen);
-			//			uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
-			//			powerUp_y = powerY_dis(gen);
-			//		}
-			//		cout << powerUp_create << endl;
-			//		cout << powerUp_exist << endl;
-			//	}
-			//}			
-			/////////////////////////
-
-
-			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
-			{
-				m_ballSound.play();
-
-				if (ai)
-				{
-					
-					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = m_window.getSize().x;*/
-
-					uniform_int_distribution<> dis(300, rnd_max);
-					//int m_viewDist = dis(gen);
-					m_viewDist = dis(gen);
-					if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
-					//cout << m_viewDist << endl;
-				}
-
-
-				if (m_diff > 1) spd += 0.01;
-				m_ball2.updateVelocity(spd);
-				if (powerUp_exist == false)
-				{
-					uniform_int_distribution<> dis(0, 128);
-					powerUp_create = dis(gen);
-					if (powerUp_create < 32)
-					{
-						uniform_int_distribution<> powerX_dis(255, (m_window.getSize().x - 255));
-						powerUp_x = powerX_dis(gen);
-						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
-						powerUp_y = powerY_dis(gen);
-					}
-					cout << powerUp_create << endl;
-					cout << powerUp_exist << endl;
-				}
-			}
-
-			if (m_p1Score>19 || m_p2Score > 19)
-			{
-				m_goverSound.play();
-				
-				scored_timeout = 1200;
-				m_hud.setCharacterSize(80);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
-				m_gStates= GameEngine::gameOver;
-			}
-		
-		}
-
-
-////////////////////////////////////////
-		/////////////////PVP
-/////////////////////
-
-
-		if (m_gStates == 9)
-		{
-
-			cout << ballSize << endl;
-
-			if (game_start == false)
-			{
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-
-				// Check if the intro music is still playing, and stop it 
-				if (m_drumsSound.getStatus() == sf::Sound::Playing) {
-					m_drumsSound.stop();
-				}
-				game_start = true;
-			}
-				//play music in the loop
-				if (m_SoundtrackSound.getStatus() != sf::Sound::Playing) {
-					m_SoundtrackSound.play();
-				}
-
-				//hide power up hwn time run out
-				if (powerUp_hide > 2)
-				{
-					powerUp_hide --;
-					cout << "powerUp_hide:" << powerUp_hide << endl;
-					cout << "XXXXXXXXXXXX:    " << powerUp_x << endl;
-					cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;
-				}
-				else if (powerUp_hide > 0)
-				{
-					m_powerUp.setPosition(1000, 1000);
-
-			}
-
-
-			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-				m_gStates = GameStates::mainMenu;*/
-				////cout << m_diff;
-			// ADD YOUR CODE HERE !!!
-
-			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				//cout << "UP key pressed" << endl;
-				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
-			}*/
-
-			//menu , pause in future	
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			{
-				//reset all vars to default values
-				m_p1Score = 0;
-				m_p2Score = 0;
-				scored_timeout = 1200;
-				m_hud.setCharacterSize(40);
-				m_gStates = GameStates::mainMenu;
-			}
-
-
-			//set default char size when score
-			if (scored)
-			{
-				scored_timeout--;
-				if (scored_timeout < 1)
-				{
-					m_hud.setCharacterSize(40);
-					scored = false;
-				}
-			}
-
-			//cout << scored_timeout << endl;
-			//cout << countD << endl;
-
-
-			// increse player score
-			if ((m_ball.getPosition().x < 0))
-			{
-				m_hud.setCharacterSize(80);
-				scored = true;
-				m_goalSound.play();
-				Sleep(400);
-				countD = 2000;
-				m_p2Score++;
-
-				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
-			}
-			else if ((m_ball.getPosition().x > m_window.getSize().x))
-			{
-				m_hud.setCharacterSize(80);
-				scored = true;
-				m_goalSound.play();
-				Sleep(400);
-				countD = 2000;
-				m_p1Score++;
-
-				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
-			}
-			//Paddle1 - Human Player move paddle
-			//This setup prevent to go paddle outside screen when score
-			else if (m_paddle1.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
-			{
-				m_paddle1.moveUp(dt);
-				cout << m_paddle1.getPosition().y << endl;
-			}
-			else if (m_paddle1.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
-			{
-				m_paddle1.moveDown(dt);
-				cout << m_paddle1.getPosition().y << endl;
-			}
-
-			//Score for 2nd ball
-			//if (ball2)
-			//{
-			//	if ((m_ball2.getPosition().x < 0))
-			//	{
-			//		m_p2Score++;
-
-			//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-			//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
-			//	}
-			//	else if ((m_ball2.getPosition().x > m_window.getSize().x))
-			//	{
-			//		m_p1Score++;
-
-			//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-			//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
-			//	}
-			//}
-
-			//Restet ball position
-			if ((m_ball.getPosition().x < 0) || (m_ball.getPosition().x > m_window.getSize().x))
-			{
-				
-				
-				//Set position of Balls (if 2nd exist)
+				//AI for 2nd BALL
 				if (ball2)
 				{
-					//Set position of 1st Ball
-					//on 1/3h m_ball.setPosition(m_window.getSize().x / 2.f, 600 * 0.3);
-					m_ball.setPosition(m_window.getSize().x / 2.f, 600 / 2.f);
-					//Set position of 2nd Ball
-					//on 2/3h m_ball2.setPosition(m_window.getSize().x / 2.f, 600 * 0.6);
-					m_ball2.setPosition(m_window.getSize().x / 2.f, 600 / 2.f);
-					scored_timeout = 1200;
-				}
-				else
-				{
-					//Set position of 1st Ball
-					m_ball.setPosition(m_window.getSize().x / 2.f, 600 / 2.f);
-					scored_timeout = 1200;
+					if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y < m_paddle2.getPosition().y))
+					{
+						m_paddle2.moveUp(dt / m_diff);
+					}
+					else if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y > m_paddle2.getPosition().y))
+					{
+						m_paddle2.moveDown(dt / m_diff);
+					}
 				}
 
-
-				//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-				//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
 			}
-
-			//AI
-			if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y < m_paddle2.getPosition().y))
-			{
-				m_paddle2.moveUp(dt / m_diff);
-			}
-			else if (m_ball.getPosition().x > m_viewDist && (m_ball.getPosition().y > m_paddle2.getPosition().y))
-			{
-				m_paddle2.moveDown(dt / m_diff);
-			}
-			//AI for 2nd BALL
-			if (ball2)
-			{
-				if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y < m_paddle2.getPosition().y))
-				{
-					m_paddle2.moveUp(dt / m_diff);
-				}
-				else if (m_ball2.getPosition().x > m_viewDist && (m_ball2.getPosition().y > m_paddle2.getPosition().y))
-				{
-					m_paddle2.moveDown(dt / m_diff);
-				}
-			}
-
-
 
 
 			//random AI
@@ -1643,25 +1151,6 @@ void GameEngine::run()
 			}
 		
 		}
-
-		//////powerups
-		//if (m_powerup.getBounds().contains(m_ball.getPosition()))
-		/*{
-			//bigball
-			ballSize=20;
-			//smallball
-			ballSize=5;
-
-			//slowball
-			spd/=2;
-			m_ball.updateVelocity(spd);
-		}
-		*/
-		//if (m_paddle2.getBounds().height)
-		//{
-		//	m_ball.move(-dt, m_window);
-		//	
-		//}
 
 		//float p1y=m_paddle1.getPosition().y
 
