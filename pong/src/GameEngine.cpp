@@ -12,20 +12,10 @@ using namespace std;
 float ballSize = 8;
 
 //colors
-float p1R = 0;
-float p1G = 0;
-float p1B = 0;
-
-float p2R = 0;
-float p2G = 0;
-float p2B = 0;
-
 float ballR = 0;
 float ballG = 0;
 float ballB = 0;
 
-sf::Color cP1(p1R, p1G, p1B);
-sf::Color cP2(p2R, p2G, p2B);
 sf::Color cBall(ballR, ballG, ballB);
 
 // initial powerUp position
@@ -51,6 +41,7 @@ int gOverCounter = 2000;
 //for pause game
 ///true if game has been stared
 bool paused = false;
+int pause_delay = 1;
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
@@ -176,12 +167,6 @@ void GameEngine::draw()
 			uniform_int_distribution<> disPbgY(-20, 20);
 			int powerUp_shakeY = disPbgY(gen);
 			m_powerUp.setPosition(powerUp_x+ powerUp_shakeX, powerUp_y+ powerUp_shakeY);
-			/*sf::RectangleShape powerUp_bg(sf::Vector2f(50, 50));
-			powerUp_bg.setFillColor(sf::Color::Yellow);
-			powerUp_bg.setPosition(powerUp_x- powerUp_bgX, powerUp_y- powerUp_bgY);
-			m_window.draw(powerUp_bg)*/;
-
-			
 		}
 		if (powerUp_exist && powerUp_hide > 0) m_powerUp.draw(m_window);
 		//m_powerUp.draw(m_window);
@@ -273,11 +258,7 @@ void GameEngine::update()
 
 		ss << "    P.O.N.G.\n\n\n    Top 5\n\n";
 		ss << records << endl;
-		//while (getline(inputFile, records)) 
-		//{
-		//	ss << "    P.O.N.G.\n\n\ntop 5\n";
-		//	ss << records << endl;
-		//}
+
 
 		inputFile.close();
 		break;
@@ -330,16 +311,7 @@ void GameEngine::run()
 				m_introSound.play();
 				introSound_done = true;
 			}
-			//play music in the loop
-			//else if (introSound_done == true && (m_introSound.getStatus() != sf::Sound::Playing) && (m_drumsSound.getStatus() != sf::Sound::Playing))
-			//{
-			//	m_drumsSound.play();
-			//}
 
-			////cout << "ballR " << ballR << endl;
-
-/*			countD--;
-			//cout << countD << endl*/;
 			
 			if (r < 255) 
 			{
@@ -356,14 +328,14 @@ void GameEngine::run()
 				//sf::Color c(r, g, b);
 				//m_hud.setFillColor(c);
 				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 				m_gStates = GameStates::mainMenu;
 			}
 		}
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
+
 			if (event.type == sf::Event::Closed) m_window.close();
 
 			//m_gStates = GameStates::intro
@@ -420,24 +392,34 @@ void GameEngine::run()
 /////pauseMenu			
 			if (m_gStates == 10)
 			{
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 				// Check if the intro music is still playing, and stop it 
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
 					m_SoundtrackSound.stop();
 				}
-				//Sleep(1000);
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				
+				
+				if (pause_delay > 0)
 				{
-					Sleep(1000);
-					//paused = false;
-					m_gStates = GameStates::playing;
+					pause_delay--;
+					cout << pause_delay << endl;
 				}
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+				else
 				{
-					paused = false;
-					m_gStates = GameStates::mainMenu;
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					{
+						//Sleep(1000);
+						//paused = false;
+						m_gStates = GameStates::playing;
+					}
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+					{
+						paused = false;
+						m_gStates = GameStates::mainMenu;
+					}
 				}
-
+				
+				
 			}
 
 			//m_gStates = GameStates::vsAi
@@ -545,8 +527,7 @@ void GameEngine::run()
 				
 				
 				Sleep(3000);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 
 				// Check if the intro music is still playing, and stop it 
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
@@ -567,7 +548,7 @@ void GameEngine::run()
 		if (m_gStates == 4)
 		{
 
-			cout << ballSize << endl;
+			//cout << ballSize << endl;
 
 			if (game_start == false)
 			{
@@ -588,9 +569,9 @@ void GameEngine::run()
 				if (powerUp_hide > 2)
 				{
 					powerUp_hide --;
-					cout << "powerUp_hide:" << powerUp_hide << endl;
-					cout << "XXXXXXXXXXXX:    " << powerUp_x << endl;
-					cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;
+					//cout << "powerUp_hide:" << powerUp_hide << endl;
+					//cout << "XXXXXXXXXXXX:    " << powerUp_x << endl;
+					//cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;
 				}
 				else if (powerUp_hide > 0)
 				{
@@ -598,27 +579,13 @@ void GameEngine::run()
 
 			}
 
-
-			/*if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-				m_gStates = GameStates::mainMenu;*/
-				////cout << m_diff;
-			// ADD YOUR CODE HERE !!!
-
-			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				//cout << "UP key pressed" << endl;
-				m_paddle1.move(0, -m_paddle1.getSpeed() * dt);
-			}*/
-
-
-
 			//set default char size when score
 			if (scored)
 			{
 				scored_timeout--;
 				if (scored_timeout < 1)
 				{
-					m_hud.setCharacterSize(40);
+					setDefaultFontSize();
 					scored = false;
 				}
 			}
@@ -630,7 +597,7 @@ void GameEngine::run()
 			// increse player score
 			if ((m_ball.getPosition().x < 0))
 			{
-				m_hud.setCharacterSize(80);
+				setLargeFontSize();
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
@@ -642,7 +609,7 @@ void GameEngine::run()
 			}
 			else if ((m_ball.getPosition().x > m_window.getSize().x))
 			{
-				m_hud.setCharacterSize(80);
+				setLargeFontSize();
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
@@ -661,13 +628,13 @@ void GameEngine::run()
 			if (m_paddle1.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 			{
 				m_paddle1.moveUp(dt);
-				cout << m_paddle1.getPosition().y << endl;
-				cout << ai << endl;
+				//cout << m_paddle1.getPosition().y << endl;
+				//cout << ai << endl;
 			}
 			else if (m_paddle1.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 			{
 				m_paddle1.moveDown(dt);
-				cout << m_paddle1.getPosition().y << endl;
+				//cout << m_paddle1.getPosition().y << endl;
 			}
 ////////PLAYER2 MOVE
 			if (ai == false)
@@ -675,32 +642,14 @@ void GameEngine::run()
 				if (m_paddle2.getPosition().y > 55 && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 				{
 					m_paddle2.moveUp(dt);
-					cout << m_paddle2.getPosition().y << endl;
+					//cout << m_paddle2.getPosition().y << endl;
 				}
 				else if (m_paddle2.getPosition().y < 555 && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 				{
 					m_paddle2.moveDown(dt);
-					cout << m_paddle2.getPosition().y << endl;
+					//cout << m_paddle2.getPosition().y << endl;
 				}
 			}
-			//Score for 2nd ball
-			//if (ball2)
-			//{
-			//	if ((m_ball2.getPosition().x < 0))
-			//	{
-			//		m_p2Score++;
-
-			//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-			//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
-			//	}
-			//	else if ((m_ball2.getPosition().x > m_window.getSize().x))
-			//	{
-			//		m_p1Score++;
-
-			//		//m_ball.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-			//		//m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), 8, 400.f, sf::Color::Yellow);
-			//	}
-			//}
 
 			//Restet ball position
 			if ((m_ball.getPosition().x < 0) || (m_ball.getPosition().x > m_window.getSize().x))
@@ -786,68 +735,6 @@ void GameEngine::run()
 			}
 
 
-			//random AI
-			// Get the mouse position relative to the desktop
-			//sf::Vector2i mousePositionDesktop = sf::Mouse::getPosition();
-			//random_device rd;
-			//mt19937 gen(rd());
-			//int rnd_max = 127 + mousePositionDesktop.y;
-			//uniform_int_distribution<> dis(0, rnd_max);
-			//int random_number = dis(gen);
-			////cout << random_number << endl;
-			////if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
-			//if (random_number > rnd_max-rnd_max*0.2)
-			//{
-			//	//move_up
-			//	m_paddle2.moveUp(dt/5);
-			//	//Sleep(100);
-			//}
-			////else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
-			//else if (random_number < rnd_max * 0.21)
-			//{
-			//	//move_down
-
-			//	m_paddle2.moveDown(dt/5);
-			//	//Sleep(100);
-			//}
-			/*
-			//if (random_number > rnd_max * 0.95)
-			if (random_number > 200)
-			{
-				//random AI -- easy mode
-
-					//if ((random_number > rnd_max - rnd_max * 0.1) && (m_paddle2.getPosition().y < 600))
-				if (random_number > rnd_max - rnd_max * 0.5)
-				{
-					//move_up
-					m_paddle2.moveUp(dt / 5);
-					//Sleep(100);
-				}
-				//else if ((random_number < rnd_max * 0.11) && (m_paddle2.y < 600))
-				else if (random_number < rnd_max * 0.51)
-				{
-					//move_down
-
-					m_paddle2.moveDown(dt / 5);
-					//Sleep(100);
-				}
-			}
-			else
-			{
-				//impossible
-				//m_paddle2.getPosition.y() = m_ball.getPosition.y();
-				//m_paddle2.setPosition(m_paddle2.getPosition().x, m_ball.getPosition().y);
-
-
-			}*/
-
-			//move balls
-			//if (ballR==255 && ballG==255)
-			//{
-				//sf::Color cBall(ballR, ballG, ballB);
-				//m_ball.setFillColor(cBall);
-				////cout << "ballR " << ballR<<endl;
-				//sf::Color c(r, g, b);
 				if (countD > 0)
 				{
 					countD--;
@@ -870,15 +757,7 @@ void GameEngine::run()
 
 					}
 				}
-			//}
-			//else
-			//{
-			//	ballR++;
-			//	ballG++;
-			//	sf::Color cBall(ballR, ballG, ballB);
-			//	m_ball.setFillColor(cBall);
-			//}
-			///bounce ball 1
+
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
@@ -914,8 +793,8 @@ void GameEngine::run()
 						powerUp_hide = 10000;
 					}
 
-					cout << powerUp_create<<endl;
-					cout << powerUp_exist << endl;
+					//cout << powerUp_create<<endl;
+					//cout << powerUp_exist << endl;
 
 				}
 				
@@ -927,10 +806,6 @@ void GameEngine::run()
 				m_ballSound.play();
 				if (ai)
 				{
-					
-					//int rnd_max = 127 + mousePositionDesktop.y;
-					/*int rnd_max = m_window.getSize().x;*/
-
 					uniform_int_distribution<> dis(300, rnd_max);
 					//int m_viewDist = dis(gen);
 					m_viewDist = dis(gen);
@@ -954,8 +829,8 @@ void GameEngine::run()
 						powerUp_y = powerY_dis(gen);
 						powerUp_hide = 10000;
 					}
-					cout << powerUp_create << endl;
-					cout << powerUp_exist << endl;
+					//cout << powerUp_create << endl;
+					//cout << powerUp_exist << endl;
 
 				}
 			}
@@ -993,8 +868,8 @@ void GameEngine::run()
 							uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
 							powerUp_y = powerY_dis(gen);
 						}
-						cout << powerUp_create << endl;
-						cout << powerUp_exist << endl;
+						//cout << powerUp_create << endl;
+						//cout << powerUp_exist << endl;
 					}
 				}
 			
@@ -1011,12 +886,6 @@ void GameEngine::run()
 						m_ball2.updateVelocity(-0.5);
 						m_ball.updateVelocity(0.5);
 					}
-					//else if (pwr_choose < 3)
-					//{
-					//	//m_paddle1.setSize(m_size);
-					//	m_ball2.updateVelocity(0.5);
-					//	m_ball.updateVelocity(2);
-					//}
 					else
 					{
 						m_ball2.updateVelocity(-0.5);
@@ -1034,16 +903,11 @@ void GameEngine::run()
 				ball2 = true;
 				if (pwr_choose < 3)
 				{
-					//m_paddle1.setSize(m_size);
+
 					m_ball2.updateVelocity(0.5);
 					m_ball.updateVelocity(-0.5);
 				}
-				//else if (pwr_choose < 3)
-				//{
-				//	//m_paddle1.setSize(m_size);
-				//	m_ball2.updateVelocity(0.5);
-				//	m_ball.updateVelocity(2);
-				//}
+
 				else
 				{
 					m_ball2.updateVelocity(0.5);
@@ -1053,43 +917,6 @@ void GameEngine::run()
 				powerUp_exist = false;
 			}
 
-			/////////////////////////////////////////
-			//if (centerCircle.getBounds().contains(m_ball2.getPosition()))
-			//{
-			//	m_ballSound.play();
-
-			//	if (ai)
-			//	{
-			//		
-			//		//int rnd_max = 127 + mousePositionDesktop.y;
-			//		/*int rnd_max = m_window.getSize().x;*/
-
-			//		uniform_int_distribution<> dis(300, rnd_max);
-			//		//int m_viewDist = dis(gen);
-			//		m_viewDist = dis(gen);
-			//		if (m_viewDist < 32 || (m_viewDist < 710 && m_viewDist>660)) m_viewDist = m_window.getSize().x;
-			//		//cout << m_viewDist << endl;
-			//	}
-
-
-			//	if (m_diff > 1) spd += 0.01;
-			//	m_ball2.updateVelocity(spd);
-			//	if (powerUp_exist == false)
-			//	{
-			//		uniform_int_distribution<> dis(0, 128);
-			//		powerUp_create = dis(gen);
-			//		if (powerUp_create < 32)
-			//		{
-			//			uniform_int_distribution<> powerX_dis(127, (m_window.getSize().x - 127));
-			//			powerUp_x = powerX_dis(gen);
-			//			uniform_int_distribution<> powerY_dis(127, (m_window.getSize().y - 127));
-			//			powerUp_y = powerY_dis(gen);
-			//		}
-			//		cout << powerUp_create << endl;
-			//		cout << powerUp_exist << endl;
-			//	}
-			//}			
-			/////////////////////////
 
 
 			if (m_paddle2.getBounds().contains(m_ball2.getPosition()))
@@ -1123,8 +950,8 @@ void GameEngine::run()
 						uniform_int_distribution<> powerY_dis(255, (m_window.getSize().y - 255));
 						powerUp_y = powerY_dis(gen);
 					}
-					cout << powerUp_create << endl;
-					cout << powerUp_exist << endl;
+					//cout << powerUp_create << endl;
+					//cout << powerUp_exist << endl;
 				}
 			}
 
@@ -1133,8 +960,7 @@ void GameEngine::run()
 				m_goverSound.play();
 				
 				scored_timeout = 1200;
-				m_hud.setCharacterSize(80);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
+				setLargeFontSize();
 				m_gStates= GameEngine::gameOver;
 			}
 
@@ -1158,6 +984,8 @@ void GameEngine::run()
 				/*m_ball.updateVelocity(0);
 				m_ball2.updateVelocity(0);*/
 				//pause game
+
+				pause_delay = 1;
 				paused = true;
 
 				//to qiut

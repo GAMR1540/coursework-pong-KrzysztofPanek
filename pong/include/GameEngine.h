@@ -63,5 +63,17 @@ public:
 	void rand128();
 	void run();
 
+	void setDefaultFontSize()
+	{
+		m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
+		m_hud.setCharacterSize(40);
+	}
+
+	void setLargeFontSize()
+	{
+		m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
+		m_hud.setCharacterSize(80);
+	}
+
 };
 
