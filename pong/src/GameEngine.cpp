@@ -9,78 +9,87 @@
 
 using namespace std;
 
-float ballSize = 8;
-
-//colors
-float p1R = 0;
-float p1G = 0;
-float p1B = 0;
-
-float p2R = 0;
-float p2G = 0;
-float p2B = 0;
-
-float ballR = 0;
-float ballG = 0;
-float ballB = 0;
-
-sf::Color cP1(p1R, p1G, p1B);
-sf::Color cP2(p2R, p2G, p2B);
-sf::Color cBall(ballR, ballG, ballB);
+ int ballSize = 8;
 
 // initial powerUp position
-int powerUp_x=-200;
-int powerUp_y=-200;
+ int powerUp_x=-200;
+ int powerUp_y=-200;
 
 //initialise random number gen
 random_device rd;
 mt19937 gen(rd());
 
-//score innitial values
-bool scored = false;
-int scored_timeout = 1200;
-
-//hide powerup
-int powerUp_hide = 0;
-
-bool game_start = 0;
-
-//game couver counter
-int gOverCounter = 2000;
-
-//for pause game
-///true if game has been stared
-bool paused = false;
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
-	//m_halfWayLife(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Red),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
-	/*m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
-	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
 {
+
+	//score innitial values
+	scored = false;
+	scored_timeout = 1200;
+
+	//colors
+	ballR = 0;
+	ballG = 0;
+	ballB = 0;
+
+	sf::Color cBall(ballR, ballG, ballB);
+
+	game_start = 0;
+
+	//game couver counter
+	gOverCounter = 2000;
+
+	//for pause game
+	///true if game has been stared
+	paused = false;
+	pause_delay = 2;
+
+	// powerup vars
+	powerUp_hide = 0;
 	powerUp_create = 100;
 	powerUp_exist = false;
 	powerUp_set = false;
+
+	//score
 	m_p1Score = 0;
 	m_p2Score = 0;
+
+	//true when playing with AI
+	//false when PvP
 	ai = false;
+
+	//Difficulty
 	m_diff = 0;
+
+	//distance of view of enemy
 	m_viewDist = 0;
+
 	m_defend = 0;
+
+	// max random number
 	rnd_max = 600;
+
+	//true when 2nd ball is in game
+	//default false
 	ball2=false;
+
 	introSound_done = false;
+
+	//default player name
+	// for TOP5
 	char playerName[6] = "D.M.U";
+
+	//tmp colors
 	//sf::Color orange(255, 160, 0);
 	sf::Color c(0, 0, 0);
 
+	//AUDIO
 	//create sound buffers 
 	m_ballSound.setBuffer(m_ballBuffer);
 	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_bounce.wav");
@@ -101,6 +110,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
 	m_hud.setFont(m_font);
+	//set characters size for intro
 	m_hud.setCharacterSize(255);
 	//m_hud.setFillColor(sf::Color::White);
 	m_hud.setFillColor(c);
@@ -112,6 +122,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	
 }
 
+// draw game objects on the screen (hud etc.)
 void GameEngine::draw()
 {
 	m_window.clear();
@@ -195,13 +206,13 @@ void GameEngine::draw()
 	m_window.draw(m_hud);
 	m_window.display();
 }
+
+//set up random numbers gen for 128 
 void GameEngine::rand128()
 {
 	//random AI
 	uniform_int_distribution<> dis(0, 127);
 	int random_number = dis(gen);
-
-
 }
 
 void GameEngine::update()
@@ -263,16 +274,16 @@ void GameEngine::update()
 		break;
 	case GameEngine::vsAi:
 		//ss << "Press the Space\nkey to start";
-		ss << "    P.O.N.G.\n\n\nChoose\nis your opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
+		ss << "    P.O.N.G.\n\n\nChoose\nis your opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n\n\nEsc - Back";
 		break;	
 	case GameEngine::mPlayer:
 		//ss << "Press the Space\nkey to start";
-		ss << "    P.O.N.G.\n\n\Player1\tPlayer2\n\n\t\tColor\nBlue\t\t\tRed\n\n\tControls\nW,S,A,D\t\tArrows\n\n\n\n\nPress SPACE\nto start\n";
+		ss << "    P.O.N.G.\n\n\Player1\tPlayer2\n\n\t\tColor\nBlue\t\t\tRed\n\n\tControls\nW,S,A,D\t\tArrows\n\n\nEsc - Back\n\nSPACE - Start\n";
 		break;
 	case GameEngine::top5:
 
 		ss << "    P.O.N.G.\n\n\n    Top 5\n\n";
-		ss << records << endl;
+		ss << records << endl<< "Esc - Back";
 		//while (getline(inputFile, records)) 
 		//{
 		//	ss << "    P.O.N.G.\n\n\ntop 5\n";
@@ -356,8 +367,7 @@ void GameEngine::run()
 				//sf::Color c(r, g, b);
 				//m_hud.setFillColor(c);
 				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 				m_gStates = GameStates::mainMenu;
 			}
 		}
@@ -383,9 +393,9 @@ void GameEngine::run()
 			}
 
 			//m_gStates = GameStates::mainMenu
-			if (m_gStates == 1)
+			else if (m_gStates == 1)
 			{
-
+				setDefaultFontSize();
 
 
 				//play music in the loop
@@ -418,31 +428,35 @@ void GameEngine::run()
 
 			}			
 /////pauseMenu			
-			if (m_gStates == 10)
+			else if (m_gStates == 10)
 			{
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 				// Check if the intro music is still playing, and stop it 
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
 					m_SoundtrackSound.stop();
 				}
-
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				
+				if (pause_delay < 1)
 				{
-					//paused = false;
-					m_gStates = GameStates::playing;
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					{
+						//paused = false;
+						m_gStates = GameStates::playing;
+					}
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+					{
+						paused = false;
+						m_gStates = GameStates::mainMenu;
+					}
 				}
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
-				{
-					paused = false;
-					m_gStates = GameStates::mainMenu;
-				}
+				else pause_delay--;
 
 			}
 
 			//m_gStates = GameStates::vsAi
-			if (m_gStates == 2)
+			else if (m_gStates == 2)
 			{
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 70.f, 10);
+				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
 				//if (event.type == sf::Event::Closed) m_window.close();
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
@@ -515,22 +529,22 @@ void GameEngine::run()
 			}
 
 			//m_gStates = GameStates::top5
-			if (m_gStates == 7)
+			else if (m_gStates == 7)
 			{
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
 
-				m_gStates = GameStates::top5;
+				//m_gStates = GameStates::top5;
 
 			}
 
 			//m_gStates = GameStates::nick
-			if (m_gStates == 8)
+			else if (m_gStates == 8)
 			{
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
 
-				m_gStates = GameStates::nick;
+				//m_gStates = GameStates::nick;
 
 			}
 		}
@@ -541,11 +555,8 @@ void GameEngine::run()
 			if (gOverCounter > 0) gOverCounter--;
 			else
 			{
-				
-				
 				Sleep(3000);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-				m_hud.setCharacterSize(40);
+				
 
 				// Check if the intro music is still playing, and stop it 
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
@@ -563,10 +574,10 @@ void GameEngine::run()
 			
 		}
 		//m_gStates = GameStates::playing
-		if (m_gStates == 4)
+		else if (m_gStates == 4)
 		{
-
-			cout << ballSize << endl;
+//////////////FOR DEBUG
+			//cout << dt << endl;
 
 			if (game_start == false)
 			{
@@ -587,9 +598,9 @@ void GameEngine::run()
 				if (powerUp_hide > 2)
 				{
 					powerUp_hide --;
-					cout << "powerUp_hide:" << powerUp_hide << endl;
+					/*cout << "powerUp_hide:" << powerUp_hide << endl;
 					cout << "XXXXXXXXXXXX:    " << powerUp_x << endl;
-					cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;
+					cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;*/
 				}
 				else if (powerUp_hide > 0)
 				{
@@ -635,7 +646,7 @@ void GameEngine::run()
 				scored_timeout--;
 				if (scored_timeout < 1)
 				{
-					m_hud.setCharacterSize(40);
+					setDefaultFontSize();
 					scored = false;
 				}
 			}
@@ -647,7 +658,7 @@ void GameEngine::run()
 			// increse player score
 			if ((m_ball.getPosition().x < 0))
 			{
-				m_hud.setCharacterSize(80);
+				setLargeFontSize();
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
@@ -659,7 +670,7 @@ void GameEngine::run()
 			}
 			else if ((m_ball.getPosition().x > m_window.getSize().x))
 			{
-				m_hud.setCharacterSize(80);
+				setLargeFontSize();
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
@@ -898,6 +909,8 @@ void GameEngine::run()
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
+				m_ball.getVelocityX();
+				m_ball.getVelocityY();
 				
 				m_ballSound.play();
 
@@ -1149,8 +1162,7 @@ void GameEngine::run()
 				m_goverSound.play();
 				
 				scored_timeout = 1200;
-				m_hud.setCharacterSize(80);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
+				setLargeFontSize();
 				m_gStates= GameEngine::gameOver;
 			}
 		

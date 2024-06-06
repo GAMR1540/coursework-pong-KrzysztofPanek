@@ -18,10 +18,20 @@ void Ball::draw(sf::RenderWindow& window)
 
 void Ball::move(float dt, sf::RenderWindow& window)
 {
+	//if (dt == 0)
+	//{
+	//	dt = 1;
+	//}	
+	//
+	//if (m_velocity.y == 0)
+	//{
+	//	m_velocity.y = 1;
+	//}
+
 	m_shape.move(m_velocity * dt);
 
-	if (m_shape.getPosition().y < 1 ||
-		m_shape.getPosition().y + m_shape.getRadius() * 2 > window.getSize().y - 1)
+	if (m_shape.getPosition().y < 2 ||
+		m_shape.getPosition().y + m_shape.getRadius() * 2 > window.getSize().y - 2)
 		m_velocity.y = -m_velocity.y;
 }
 
@@ -38,6 +48,15 @@ void Ball::setPosition(float x, float y)
 void Ball::updateVelocity(float val)
 {
 	m_velocity.x = m_speed * val;
+}
+int Ball::getVelocityX()
+{
+	return m_velocity.x;
+}
+
+int Ball::getVelocityY()
+{
+	return m_velocity.y;
 }
 
 sf::CircleShape Ball::getShape()

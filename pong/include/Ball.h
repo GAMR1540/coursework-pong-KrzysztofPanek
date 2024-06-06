@@ -19,5 +19,7 @@ public:
 
 	void setFillColor(sf::Color(cBall));
 	
+	int getVelocityX();
+	int getVelocityY();
 };
 
