@@ -274,16 +274,16 @@ void GameEngine::update()
 		break;
 	case GameEngine::vsAi:
 		//ss << "Press the Space\nkey to start";
-		ss << "    P.O.N.G.\n\n\nChoose\nis your opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n";
+		ss << "    P.O.N.G.\n\n\nChoose\nis your opponent:\n\n1  - Amoeba\n2 - Noob\n3 - Pro\n4 - Terminator\n\n\nEsc - Back";
 		break;	
 	case GameEngine::mPlayer:
 		//ss << "Press the Space\nkey to start";
-		ss << "    P.O.N.G.\n\n\Player1\tPlayer2\n\n\t\tColor\nBlue\t\t\tRed\n\n\tControls\nW,S,A,D\t\tArrows\n\n\n\n\nPress SPACE\nto start\n";
+		ss << "    P.O.N.G.\n\n\Player1\tPlayer2\n\n\t\tColor\nBlue\t\t\tRed\n\n\tControls\nW,S,A,D\t\tArrows\n\n\nEsc - Back\n\nSPACE - Start\n";
 		break;
 	case GameEngine::top5:
 
 		ss << "    P.O.N.G.\n\n\n    Top 5\n\n";
-		ss << records << endl;
+		ss << records << endl<< "Esc - Back";
 		//while (getline(inputFile, records)) 
 		//{
 		//	ss << "    P.O.N.G.\n\n\ntop 5\n";
@@ -395,7 +395,7 @@ void GameEngine::run()
 			//m_gStates = GameStates::mainMenu
 			else if (m_gStates == 1)
 			{
-
+				setDefaultFontSize();
 
 
 				//play music in the loop
@@ -435,6 +435,7 @@ void GameEngine::run()
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
 					m_SoundtrackSound.stop();
 				}
+				
 				if (pause_delay < 1)
 				{
 					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
@@ -448,6 +449,7 @@ void GameEngine::run()
 						m_gStates = GameStates::mainMenu;
 					}
 				}
+				else pause_delay--;
 
 			}
 
@@ -532,7 +534,7 @@ void GameEngine::run()
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
 
-				m_gStates = GameStates::top5;
+				//m_gStates = GameStates::top5;
 
 			}
 
@@ -542,7 +544,7 @@ void GameEngine::run()
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
 
-				m_gStates = GameStates::nick;
+				//m_gStates = GameStates::nick;
 
 			}
 		}
@@ -574,8 +576,8 @@ void GameEngine::run()
 		//m_gStates = GameStates::playing
 		else if (m_gStates == 4)
 		{
-
-			cout << ballSize << endl;
+//////////////FOR DEBUG
+			//cout << dt << endl;
 
 			if (game_start == false)
 			{
@@ -907,6 +909,8 @@ void GameEngine::run()
 
 			if ( m_paddle1.getBounds().contains(m_ball.getPosition()))
 			{
+				m_ball.getVelocityX();
+				m_ball.getVelocityY();
 				
 				m_ballSound.play();
 
