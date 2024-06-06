@@ -9,7 +9,7 @@
 
 using namespace std;
 
- int BallSize = 8;
+ int ballSize = 8;
 
 // initial powerUp position
  int powerUp_x=-200;

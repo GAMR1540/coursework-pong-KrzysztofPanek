@@ -36,7 +36,6 @@ private:
 	//game has been started in play mode
 	bool game_start;
 
-	float ballSize = 8;
 
 	// vars for ball color
 	float ballR = 0;
@@ -62,9 +61,7 @@ private:
 	bool powerUp_set;
 	//hide powerup
 	int powerUp_hide;
-	// powerUp position
-	int powerUp_x;
-	int powerUp_y;
+
 
 
 	bool introSound_done;
