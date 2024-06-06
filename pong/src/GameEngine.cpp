@@ -9,7 +9,10 @@
 
 using namespace std;
 
- int ballSize = 8;
+//Some vars must be set outside GameEngine class
+// 
+//default ball size
+int ballSize = 8;
 
 // initial powerUp position
  int powerUp_x=-200;
@@ -20,6 +23,8 @@ random_device rd;
 mt19937 gen(rd());
 
 
+
+
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
@@ -28,6 +33,10 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
 {
+	//set up to draw an image
+	png.loadFromFile(".\\assets\\gfx\\MyHeadQuater.png");
+	img.setTexture(png);
+	img.setPosition(200.f, 150.f);
 
 	//score innitial values
 	scored = false;
@@ -91,6 +100,8 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 
 	//AUDIO
 	//create sound buffers 
+	///loops are not mine, but according to license for non-commercial purposes doesn't need attribution.
+	//other sound i made by myself mixing in Audacity.
 	m_ballSound.setBuffer(m_ballBuffer);
 	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_bounce.wav");
 	m_goalSound.setBuffer(m_goalBuffer);
@@ -106,7 +117,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_SoundtrackBuffer.loadFromFile(".\\assets\\audio\\pong_rockloop0.ogg");
 	m_SoundtrackSound.setLoop(true);
 
-
+	//intro
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
 	m_hud.setFont(m_font);
@@ -114,9 +125,10 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_hud.setCharacterSize(255);
 	//m_hud.setFillColor(sf::Color::White);
 	m_hud.setFillColor(c);
-
+	// change hud position
 	m_hud.setPosition((m_window.getSize().x / 6.f) - 45.f, 10);
 
+	//set speed of paddles
 	m_paddle1.setSpeed(1000.f);
 	m_paddle2.setSpeed(1000.f);
 	
@@ -128,6 +140,10 @@ void GameEngine::draw()
 	m_window.clear();
 	if (m_gStates > 0 && m_gStates < 4)
 	{
+		// Draw the image
+		img.setPosition(imgX, imgY);
+		m_window.draw(img);
+
 		m_hud.setPosition((m_window.getSize().x / 2.f) - 90.f, 10);
 		//draw menu side lines
 		sf::RectangleShape sideLineL(sf::Vector2f(8, 600));
@@ -335,6 +351,7 @@ void GameEngine::run()
 		if (m_gStates == 0)
 		{
 
+
 			//play intro sound once
 			if (introSound_done == false)
 			{
@@ -380,7 +397,7 @@ void GameEngine::run()
 			if (m_gStates == 0)
 			{
 			
-
+				
 				
 				/*sf::Color c(r, g, b);
 				m_hud.setFillColor(c);*/
