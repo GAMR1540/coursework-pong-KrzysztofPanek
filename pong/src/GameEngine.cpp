@@ -9,78 +9,86 @@
 
 using namespace std;
 
-float ballSize = 8;
-
-//colors
-float p1R = 0;
-float p1G = 0;
-float p1B = 0;
-
-float p2R = 0;
-float p2G = 0;
-float p2B = 0;
-
-float ballR = 0;
-float ballG = 0;
-float ballB = 0;
-
-sf::Color cP1(p1R, p1G, p1B);
-sf::Color cP2(p2R, p2G, p2B);
-sf::Color cBall(ballR, ballG, ballB);
+ int BallSize = 8;
 
 // initial powerUp position
-int powerUp_x=-200;
-int powerUp_y=-200;
+ int powerUp_x=-200;
+ int powerUp_y=-200;
 
 //initialise random number gen
 random_device rd;
 mt19937 gen(rd());
 
-//score innitial values
-bool scored = false;
-int scored_timeout = 1200;
-
-//hide powerup
-int powerUp_hide = 0;
-
-bool game_start = 0;
-
-//game couver counter
-int gOverCounter = 2000;
-
-//for pause game
-///true if game has been stared
-bool paused = false;
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
-	//m_halfWayLife(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
 	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Red),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
-	/*m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color cP1(p1R, p1G, p1B)),
-	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y -100.f), 10, 100, sf::Color::White),
-	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
-	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White)*///,
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
 {
+
+	//score innitial values
+	scored = false;
+	scored_timeout = 1200;
+
+	//colors
+	ballR = 0;
+	ballG = 0;
+	ballB = 0;
+
+	sf::Color cBall(ballR, ballG, ballB);
+
+	game_start = 0;
+
+	//game couver counter
+	gOverCounter = 2000;
+
+	//for pause game
+	///true if game has been stared
+	paused = false;
+
+	// powerup vars
+	powerUp_hide = 0;
 	powerUp_create = 100;
 	powerUp_exist = false;
 	powerUp_set = false;
+
+	//score
 	m_p1Score = 0;
 	m_p2Score = 0;
+
+	//true when playing with AI
+	//false when PvP
 	ai = false;
+
+	//Difficulty
 	m_diff = 0;
+
+	//distance of view of enemy
 	m_viewDist = 0;
+
 	m_defend = 0;
+
+	// max random number
 	rnd_max = 600;
+
+	//true when 2nd ball is in game
+	//default false
 	ball2=false;
+
 	introSound_done = false;
+
+	//default player name
+	// for TOP5
 	char playerName[6] = "D.M.U";
+
+	//tmp colors
 	//sf::Color orange(255, 160, 0);
 	sf::Color c(0, 0, 0);
 
+	//AUDIO
 	//create sound buffers 
 	m_ballSound.setBuffer(m_ballBuffer);
 	m_ballBuffer.loadFromFile(".\\assets\\audio\\pong_bounce.wav");
@@ -101,6 +109,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_gStates = GameStates::intro;
 	m_font.loadFromFile(".\\assets\\fonts\\digital-7.ttf");
 	m_hud.setFont(m_font);
+	//set characters size for intro
 	m_hud.setCharacterSize(255);
 	//m_hud.setFillColor(sf::Color::White);
 	m_hud.setFillColor(c);
@@ -112,6 +121,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	
 }
 
+// draw game objects on the screen (hud etc.)
 void GameEngine::draw()
 {
 	m_window.clear();
@@ -195,13 +205,13 @@ void GameEngine::draw()
 	m_window.draw(m_hud);
 	m_window.display();
 }
+
+//set up random numbers gen for 128 
 void GameEngine::rand128()
 {
 	//random AI
 	uniform_int_distribution<> dis(0, 127);
 	int random_number = dis(gen);
-
-
 }
 
 void GameEngine::update()

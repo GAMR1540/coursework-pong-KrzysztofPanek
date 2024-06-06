@@ -33,12 +33,39 @@ private:
 	Ball m_ball2;
 	PowerUp m_powerUp;
 
+	//game has been started in play mode
+	bool game_start;
 
+	float ballSize = 8;
+
+	// vars for ball color
+	float ballR = 0;
+	float ballG = 0;
+	float ballB = 0;
+
+
+	//score innitial values
+	bool scored;
+	int scored_timeout;
+
+
+	//game couver counter
+	int gOverCounter;
+
+	//for pause game
+	///true if game has been stared
+	bool paused;
+
+	//vars fo powerUp
 	int powerUp_create;
 	bool powerUp_exist;
 	bool powerUp_set;
-	//int powerUp_x;
-	//int powerUp_y;
+	//hide powerup
+	int powerUp_hide;
+	// powerUp position
+	int powerUp_x;
+	int powerUp_y;
+
 
 	bool introSound_done;
 	int m_p1Score;
