@@ -48,6 +48,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	//for pause game
 	///true if game has been stared
 	paused = false;
+	pause_delay = 2;
 
 	// powerup vars
 	powerUp_hide = 0;
@@ -366,8 +367,7 @@ void GameEngine::run()
 				//sf::Color c(r, g, b);
 				//m_hud.setFillColor(c);
 				//default m_hud.setPosition((m_window.getSize().x / 2.f) - 45.f, 10);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 				m_gStates = GameStates::mainMenu;
 			}
 		}
@@ -393,7 +393,7 @@ void GameEngine::run()
 			}
 
 			//m_gStates = GameStates::mainMenu
-			if (m_gStates == 1)
+			else if (m_gStates == 1)
 			{
 
 
@@ -428,31 +428,33 @@ void GameEngine::run()
 
 			}			
 /////pauseMenu			
-			if (m_gStates == 10)
+			else if (m_gStates == 10)
 			{
-				m_hud.setCharacterSize(40);
+				setDefaultFontSize();
 				// Check if the intro music is still playing, and stop it 
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
 					m_SoundtrackSound.stop();
 				}
-
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+				if (pause_delay < 1)
 				{
-					//paused = false;
-					m_gStates = GameStates::playing;
-				}
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
-				{
-					paused = false;
-					m_gStates = GameStates::mainMenu;
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+					{
+						//paused = false;
+						m_gStates = GameStates::playing;
+					}
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+					{
+						paused = false;
+						m_gStates = GameStates::mainMenu;
+					}
 				}
 
 			}
 
 			//m_gStates = GameStates::vsAi
-			if (m_gStates == 2)
+			else if (m_gStates == 2)
 			{
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 70.f, 10);
+				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
 				//if (event.type == sf::Event::Closed) m_window.close();
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
@@ -525,7 +527,7 @@ void GameEngine::run()
 			}
 
 			//m_gStates = GameStates::top5
-			if (m_gStates == 7)
+			else if (m_gStates == 7)
 			{
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
@@ -535,7 +537,7 @@ void GameEngine::run()
 			}
 
 			//m_gStates = GameStates::nick
-			if (m_gStates == 8)
+			else if (m_gStates == 8)
 			{
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
 					m_gStates = GameStates::mainMenu;
@@ -551,11 +553,8 @@ void GameEngine::run()
 			if (gOverCounter > 0) gOverCounter--;
 			else
 			{
-				
-				
 				Sleep(3000);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 40.f, 10);
-				m_hud.setCharacterSize(40);
+				
 
 				// Check if the intro music is still playing, and stop it 
 				if (m_SoundtrackSound.getStatus() == sf::Sound::Playing) {
@@ -573,7 +572,7 @@ void GameEngine::run()
 			
 		}
 		//m_gStates = GameStates::playing
-		if (m_gStates == 4)
+		else if (m_gStates == 4)
 		{
 
 			cout << ballSize << endl;
@@ -597,9 +596,9 @@ void GameEngine::run()
 				if (powerUp_hide > 2)
 				{
 					powerUp_hide --;
-					cout << "powerUp_hide:" << powerUp_hide << endl;
+					/*cout << "powerUp_hide:" << powerUp_hide << endl;
 					cout << "XXXXXXXXXXXX:    " << powerUp_x << endl;
-					cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;
+					cout << "YYYYYYYYYYYY:    " << powerUp_y << endl;*/
 				}
 				else if (powerUp_hide > 0)
 				{
@@ -645,7 +644,7 @@ void GameEngine::run()
 				scored_timeout--;
 				if (scored_timeout < 1)
 				{
-					m_hud.setCharacterSize(40);
+					setDefaultFontSize();
 					scored = false;
 				}
 			}
@@ -657,7 +656,7 @@ void GameEngine::run()
 			// increse player score
 			if ((m_ball.getPosition().x < 0))
 			{
-				m_hud.setCharacterSize(80);
+				setLargeFontSize();
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
@@ -669,7 +668,7 @@ void GameEngine::run()
 			}
 			else if ((m_ball.getPosition().x > m_window.getSize().x))
 			{
-				m_hud.setCharacterSize(80);
+				setLargeFontSize();
 				scored = true;
 				m_goalSound.play();
 				Sleep(400);
@@ -1159,8 +1158,7 @@ void GameEngine::run()
 				m_goverSound.play();
 				
 				scored_timeout = 1200;
-				m_hud.setCharacterSize(80);
-				m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
+				setLargeFontSize();
 				m_gStates= GameEngine::gameOver;
 			}
 		
