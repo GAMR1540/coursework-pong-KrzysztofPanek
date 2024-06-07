@@ -69,7 +69,7 @@ private:
 	float imgX1;
 	float imgY;
 	bool dirDown;
-
+	 
 	int fball_counter;
 	bool introSound_done;
 	int m_p1Score;
