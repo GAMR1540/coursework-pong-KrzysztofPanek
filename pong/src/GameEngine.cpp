@@ -27,8 +27,8 @@ mt19937 gen(rd());
 
 GameEngine::GameEngine(sf::RenderWindow& window) 
 	: m_window(window),
-	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Blue),
-	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Red),
+	m_paddle1(sf::Vector2f(20, window.getSize().y / 2.f), 10, 100, sf::Color::Cyan),
+	m_paddle2(sf::Vector2f(window.getSize().x - 20.f, window.getSize().y - 100.f), 10, 100, sf::Color::Magenta),
 	m_ball(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::Yellow),
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
@@ -63,7 +63,7 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 
 
 	//game couver counter
-	gOverCounter = 2000;
+	//gOverCounter = 13000;
 
 	//for pause game
 	///true if game has been stared
@@ -149,6 +149,11 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 void GameEngine::draw()
 {
 	m_window.clear();
+	//draw bg
+	sf::RectangleShape bg(sf::Vector2f(m_window.getSize().x, m_window.getSize().y));
+	bg.setFillColor(sf::Color(0, 100, 30));
+	bg.setPosition(0, 0);
+	m_window.draw(bg);
 	if (m_gStates > 0 && m_gStates < 4)
 	{
 		//set up hud
@@ -201,6 +206,12 @@ void GameEngine::draw()
 		
 	if (m_gStates == 4)
 	{
+		////draw bg
+		//sf::RectangleShape bg(sf::Vector2f(m_window.getSize().x, m_window.getSize().y));
+		//bg.setFillColor(sf::Color(0, 100, 30));
+		//bg.setPosition(0, 0);
+		//m_window.draw(bg);
+		
 		//draw halfway line
 		sf::RectangleShape halfWayLine(sf::Vector2f(8, m_window.getSize().y));
 		halfWayLine.setFillColor(sf::Color(100, 100, 100));
@@ -213,7 +224,7 @@ void GameEngine::draw()
 		
 
 		sf::CircleShape centerCircle1(42);
-		centerCircle1.setFillColor(sf::Color(0, 0, 0));
+		centerCircle1.setFillColor(sf::Color(0, 100, 30));
 		centerCircle1.setPosition(360, 260);
 		
 		// hide markings when scored
@@ -619,10 +630,10 @@ void GameEngine::run()
 		if (m_gStates == 5)
 		{	
 			m_hud.setPosition((m_window.getSize().x / 2.f) - 180.f, 10);
-			if (gOverCounter > 0) gOverCounter--;
-			else
-			{
-				Sleep(3000);
+			//if (gOverCounter > 0) gOverCounter--;
+			//else
+			//{
+				Sleep(5000);
 				
 
 				// Check if the intro music is still playing, and stop it 
@@ -630,7 +641,7 @@ void GameEngine::run()
 					m_SoundtrackSound.stop();
 				}
 
-				gOverCounter = 3000;
+				//gOverCounter = 13000;
 				//reset all vars to default values
 				m_p1Score = 0;
 				m_p2Score = 0;
@@ -641,7 +652,7 @@ void GameEngine::run()
 
 				setDefaultFontSize();
 				m_gStates = GameStates::mainMenu; 
-			}
+			//}
 			
 		}
 		//m_gStates = GameStates::playing
@@ -1232,7 +1243,7 @@ void GameEngine::run()
 			{
 				m_goverSound.play();
 				
-				scored_timeout = 1200;
+				scored_timeout = 2000;
 				setLargeFontSize();
 				m_gStates= GameEngine::gameOver;
 			}
