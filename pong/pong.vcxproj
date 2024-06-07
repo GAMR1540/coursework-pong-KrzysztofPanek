@@ -38,6 +38,13 @@
     <Media Include="assets\audio\pong_intro.wav" />
     <Media Include="assets\audio\pong_rockloop0.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\gfx\MyHead.pdn" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\gfx\MyHead.png" />
+    <Image Include="assets\gfx\MyHeadQuater.png" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

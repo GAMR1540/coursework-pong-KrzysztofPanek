@@ -45,4 +45,34 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\audio\pong_bounce.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\audio\pong_goal.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\audio\pong_gover.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\audio\pong_intro.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\audio\pong_rockloop0.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\gfx\MyHead.pdn">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\gfx\MyHead.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\gfx\MyHeadQuater.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

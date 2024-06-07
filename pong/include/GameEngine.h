@@ -27,6 +27,7 @@ private:
 	sf::Clock m_clock;
 
 
+
 	Paddle m_paddle1;
 	Paddle m_paddle2;
 	Ball m_ball;
@@ -63,8 +64,13 @@ private:
 	//hide powerup
 	int powerUp_hide;
 
-
-
+	//XY coords of img
+	float imgX;
+	float imgX1;
+	float imgY;
+	bool dirDown;
+	 
+	int fball_counter;
 	bool introSound_done;
 	int m_p1Score;
 	int m_p2Score;
@@ -75,8 +81,9 @@ private:
 	int m_defend;
 	bool ball2;
 	char playerName[6] = "D.M.U";
-	//float ballSize;
+	
 	static const int m_maxScore = 3;
+	////			  0		  1			2		3		4		5			6		 7		8		9			10
 	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick, PvP_playing, pauseMenu};
 	GameStates m_gStates;
 
@@ -87,6 +94,11 @@ public:
 	void update();
 	void rand128();
 	void run();
+
+	sf::Texture png;
+	sf::Sprite img;
+	sf::Sprite img1;
+	
 
 	void setDefaultFontSize()
 	{
@@ -99,5 +111,7 @@ public:
 		m_hud.setPosition((m_window.getSize().x / 2.f) - 80.f, 10);
 		m_hud.setCharacterSize(80);
 	}
+
+
 };
 
