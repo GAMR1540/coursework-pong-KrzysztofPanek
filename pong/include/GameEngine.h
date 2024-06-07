@@ -70,6 +70,7 @@ private:
 	float imgY;
 	bool dirDown;
 
+	int fball_counter;
 	bool introSound_done;
 	int m_p1Score;
 	int m_p2Score;
