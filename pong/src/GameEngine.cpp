@@ -186,11 +186,7 @@ void GameEngine::draw()
 			else dirDown = true;
 		}
 
-		// Draw the image
-		img.setPosition(imgX, imgY);
-		img1.setPosition(imgX1, imgY);
-		m_window.draw(img);
-		m_window.draw(img1);
+
 	}
 	// draw image in intro 	
 	if (m_gStates == 0)
@@ -204,7 +200,7 @@ void GameEngine::draw()
 		m_ball2.setPosition(m_window.getSize().x / 2.f, m_window.getSize().y / 2.f);
 	}
 	// draw image when scored or game over
-	if (scored == true || m_gStates == 5)
+	if ((m_gStates == 4 && scored == true) || (m_gStates == 5))
 	{
 		// Draw the image
 		if (m_gStates == 5) m_hud.setPosition((m_window.getSize().x / 2.f) - 180.f, 10);
