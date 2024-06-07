@@ -66,7 +66,9 @@ private:
 
 	//XY coords of img
 	float imgX;
+	float imgX1;
 	float imgY;
+	bool dirDown;
 
 	bool introSound_done;
 	int m_p1Score;
@@ -80,6 +82,7 @@ private:
 	char playerName[6] = "D.M.U";
 	
 	static const int m_maxScore = 3;
+	////			  0		  1			2		3		4		5			6		 7		8		9			10
 	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick, PvP_playing, pauseMenu};
 	GameStates m_gStates;
 
@@ -93,6 +96,7 @@ public:
 
 	sf::Texture png;
 	sf::Sprite img;
+	sf::Sprite img1;
 	
 
 	void setDefaultFontSize()

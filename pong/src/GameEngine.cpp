@@ -33,10 +33,18 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_ball2(sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f), ballSize, 400.f, sf::Color::White),
 	m_powerUp(sf::Vector2f(powerUp_x, powerUp_y), 32, 32, sf::Color::Green)
 {
+	// set default Position of image
+	imgX = -20.f;  
+	imgX1 = window.getSize().x - 320.f;
+	imgY = 0.f;
+	dirDown = true;
+
 	//set up to draw an image
 	png.loadFromFile(".\\assets\\gfx\\MyHeadQuater.png");
 	img.setTexture(png);
-	img.setPosition(200.f, 150.f);
+	img1.setTexture(png);
+	img.setPosition(imgX, imgY);
+	img1.setPosition(imgX1, imgY);
 
 	//score innitial values
 	scored = false;
@@ -49,7 +57,10 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 
 	sf::Color cBall(ballR, ballG, ballB);
 
+	//if gameplay sytrated >0
 	game_start = 0;
+
+
 
 	//game couver counter
 	gOverCounter = 2000;
@@ -140,10 +151,7 @@ void GameEngine::draw()
 	m_window.clear();
 	if (m_gStates > 0 && m_gStates < 4)
 	{
-		// Draw the image
-		img.setPosition(imgX, imgY);
-		m_window.draw(img);
-
+		//set up hud
 		m_hud.setPosition((m_window.getSize().x / 2.f) - 90.f, 10);
 		//draw menu side lines
 		sf::RectangleShape sideLineL(sf::Vector2f(8, 600));
@@ -154,26 +162,63 @@ void GameEngine::draw()
 		m_window.draw(sideLineL);
 		sideLineR.setPosition(600, 0);
 		m_window.draw(sideLineR);
+
+		//change img position
+		if (dirDown)
+		{
+			if (imgY < m_window.getSize().y - 300) imgY += 0.1;
+			else dirDown = false;
+		}
+		else
+		{
+			if (imgY > 1) imgY -= 0.1;
+			else dirDown = true;
+		}
+
+		// Draw the image
+		img.setPosition(imgX, imgY);
+		img1.setPosition(imgX1, imgY);
+		m_window.draw(img);
+		m_window.draw(img1);
 	}
 		
-		if (m_gStates == 4)
+	if (m_gStates == 0)
+	{
+		// Draw the image
+		img.setPosition(((m_window.getSize().x / 2.f) - 200.f), 250.f);
+		m_window.draw(img);
+	}	
+	if (scored == true || )
+	{
+		// Draw the image
+		img.setPosition(((m_window.getSize().x / 2.f) - 200.f), 100.f);
+		m_window.draw(img);
+	}
+		
+	if (m_gStates == 4)
 	{
 		//draw halfway line
 		sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
 		halfWayLine.setFillColor(sf::Color(100, 100, 100));
 		halfWayLine.setPosition(400, 0);
-		m_window.draw(halfWayLine);
+		
 
 		sf::CircleShape centerCircle(50);
 		centerCircle.setFillColor(sf::Color(100, 100, 100));
 		centerCircle.setPosition(355, 250);
-		m_window.draw(centerCircle);
+		
 
 		sf::CircleShape centerCircle1(42);
 		centerCircle1.setFillColor(sf::Color(0, 0, 0));
 		centerCircle1.setPosition(360, 260);
-		m_window.draw(centerCircle1);
-
+		
+		// hide markings when scored
+		if (scored == false)
+		{
+			m_window.draw(halfWayLine);
+			m_window.draw(centerCircle);
+			m_window.draw(centerCircle1);
+		}
 		//if (powerUp_create < 32)
 		if (powerUp_create < 32 || powerUp_exist)
 		{
@@ -181,11 +226,11 @@ void GameEngine::draw()
 			{
 			powerUp_hide = 10000;
 			powerUp_exist = true;
-			//draw halfway line
-			sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
-			halfWayLine.setFillColor(sf::Color(100, 100, 100));
-			halfWayLine.setPosition(400, 0);
-			m_window.draw(halfWayLine);
+			////draw halfway line
+			//sf::RectangleShape halfWayLine(sf::Vector2f(8, 600));
+			//halfWayLine.setFillColor(sf::Color(100, 100, 100));
+			//halfWayLine.setPosition(400, 0);
+			//m_window.draw(halfWayLine);
 			
 				uniform_int_distribution<> disPX(100, 700);
 				int powerUp_x = disPX(gen);
@@ -310,7 +355,7 @@ void GameEngine::update()
 		break;
 	case GameEngine::playing:
 		ss << m_p1Score << " - " << m_p2Score;
-		if (scored == true)	ss << "\n\n\nGOAL";
+		if (scored == true)	ss << "\n\n\n\n\nGOAL";
 		if ((powerUp_exist) && (m_powerUp.getBounds().contains(m_ball.getPosition())))	ss << "\n\n\nFAKE BALL";
 		//if (powerUp_create < 32)	ss << "\n\n\nFAKE BALL";
 
@@ -396,7 +441,7 @@ void GameEngine::run()
 			//m_gStates = GameStates::intro
 			if (m_gStates == 0)
 			{
-			
+				
 				
 				
 				/*sf::Color c(r, g, b);
