@@ -137,7 +137,6 @@ GameEngine::GameEngine(sf::RenderWindow& window)
 	m_hud.setFont(m_font);
 	//set characters size for intro
 	m_hud.setCharacterSize(255);
-	//m_hud.setFillColor(sf::Color::White);
 	m_hud.setFillColor(c);
 	// change hud position
 	m_hud.setPosition((m_window.getSize().x / 6.f) - 45.f, 10);
