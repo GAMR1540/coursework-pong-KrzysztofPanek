@@ -432,7 +432,7 @@ void GameEngine::run()
 			}
 
 			//m_gStates = GameStates::mainMenu
-			//Main Menu
+			//code for Main Menu
 			else if (m_gStates == 1)
 			{
 				setDefaultFontSize();
