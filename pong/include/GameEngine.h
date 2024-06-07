@@ -78,13 +78,12 @@ private:
 	int rnd_max;
 	int m_diff;
 	int m_viewDist;
-	int m_defend;
 	bool ball2;
 	char playerName[6] = "D.M.U";
 	
 	static const int m_maxScore = 3;
 	////			  0		  1			2		3		4		5			6		 7		8		9			10
-	enum GameStates {intro, mainMenu, vsAi, mPlayer, playing, gameOver, gamePaused, top5, nick, PvP_playing, pauseMenu};
+	enum GameStates {intro, mainMenu, vsAiMenu, mPlayerMenu, playing, gameOver, gamePaused, top5, nick, PvP_playing, pauseMenu};
 	GameStates m_gStates;
 
 
